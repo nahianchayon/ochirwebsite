@@ -101,8 +101,18 @@ window.openAdminControlRoom = async function () {
   renderOrders();
   renderProducts();
   renderUsersTable();
-  pollAdminChat();
+  await pollAdminChat();
   loadSettingsIntoForm();
+
+  // Start live polling for concierge chat while admin room is open
+  if (!adminChatPollTimer) {
+    adminChatPollTimer = setInterval(() => {
+      const modal = document.getElementById("admin-control-room-modal");
+      if (modal && (modal.classList.contains("is-open") || !modal.hidden)) {
+        pollAdminChat();
+      }
+    }, 2500);
+  }
 };
 
 window.closeAdminControlRoom = function () {
@@ -1183,18 +1193,44 @@ function initChatInbox() {
   if (replyForm) {
     replyForm.addEventListener("submit", async (e) => {
       e.preventDefault();
-      if (!activeChatSessionId) return;
-
       const input = document.getElementById("admin-chat-reply-input");
       const text = input ? input.value.trim() : "";
       if (!text) return;
 
-      input.value = "";
       const store = window.OchirStore;
-      const res = await store.sendAdminChatReply(activeChatSessionId, text);
+      if (!activeChatSessionId) {
+        const convs = await store.fetchAdminChatConversations();
+        if (convs.length > 0) {
+          activeChatSessionId = convs[0].sessionId;
+        } else {
+          if (typeof showOchirToast === "function") {
+            showOchirToast("Please select a customer dialogue before replying.", "error");
+          }
+          return;
+        }
+      }
 
-      if (res && res.success) {
-        pollAdminChat();
+      input.value = "";
+      const replyBtn = document.getElementById("btn-admin-reply");
+      if (replyBtn) replyBtn.disabled = true;
+
+      try {
+        const res = await store.sendAdminChatReply(activeChatSessionId, text);
+        if (res && res.success) {
+          await pollAdminChat();
+          if (typeof showOchirToast === "function") {
+            showOchirToast("Concierge reply sent to customer.", "success");
+          }
+        } else {
+          if (typeof showOchirToast === "function") {
+            showOchirToast("Failed to deliver reply. Please check connection.", "error");
+          }
+        }
+      } catch (err) {
+        console.error("Admin chat reply error:", err);
+      } finally {
+        if (replyBtn) replyBtn.disabled = false;
+        if (input) input.focus();
       }
     });
   }
@@ -1204,6 +1240,9 @@ async function pollAdminChat() {
   const store = window.OchirStore;
   const convList = document.getElementById("admin-chat-conv-list");
   const inqBadge = document.getElementById("sidebar-inq-badge");
+  const replyInput = document.getElementById("admin-chat-reply-input");
+  const replyBtn = document.getElementById("btn-admin-reply");
+
   if (!convList) return;
 
   const convs = await store.fetchAdminChatConversations();
@@ -1214,14 +1253,25 @@ async function pollAdminChat() {
   }
 
   if (convs.length === 0) {
-    convList.innerHTML = `<p style="color:#86868b;font-size:0.85rem;padding:16px;">No customer concierge chats active.</p>`;
+    convList.innerHTML = `<p style="color:#86868b;font-size:0.85rem;padding:16px;">No customer concierge chats active yet.</p>`;
+    const threadBody = document.getElementById("admin-chat-thread-body");
+    if (threadBody) {
+      threadBody.innerHTML = `<p style="color:#86868b;text-align:center;margin:auto;">When customers send questions from the storefront, their conversation will appear here.</p>`;
+    }
+    if (replyInput) replyInput.disabled = true;
+    if (replyBtn) replyBtn.disabled = true;
     return;
+  }
+
+  // Auto-select the first conversation if none selected yet
+  if (!activeChatSessionId || !convs.some((c) => c.sessionId === activeChatSessionId)) {
+    activeChatSessionId = convs[0].sessionId;
   }
 
   convList.innerHTML = convs
     .map(
       (c) => `
-    <div class="inquiry-item ${c.sessionId === activeChatSessionId ? "is-active" : ""}" style="cursor:pointer;padding:12px;border-bottom:1px solid rgba(255,255,255,0.06);" onclick="selectAdminChatSession('${c.sessionId}')">
+    <div class="inquiry-item ${c.sessionId === activeChatSessionId ? "is-active" : ""}" style="cursor:pointer;padding:12px;border-bottom:1px solid rgba(255,255,255,0.06);background:${c.sessionId === activeChatSessionId ? "rgba(255,91,0,0.12)" : "transparent"};border-left:${c.sessionId === activeChatSessionId ? "3px solid #ff5b00" : "3px solid transparent"};transition:all 0.2s ease;" onclick="selectAdminChatSession('${c.sessionId}')">
       <div style="display:flex;justify-content:space-between;margin-bottom:4px;">
         <strong>${c.customerName || "Visitor"}</strong>
         ${c.unreadCount > 0 ? `<span class="table-status-pill status-pending">${c.unreadCount} NEW</span>` : ""}
@@ -1233,6 +1283,9 @@ async function pollAdminChat() {
     )
     .join("");
 
+  if (replyInput) replyInput.disabled = false;
+  if (replyBtn) replyBtn.disabled = false;
+
   if (activeChatSessionId) {
     const activeConv = convs.find((c) => c.sessionId === activeChatSessionId);
     if (activeConv) renderChatThread(activeConv);
@@ -1241,12 +1294,14 @@ async function pollAdminChat() {
 
 window.selectAdminChatSession = async function (sessionId) {
   activeChatSessionId = sessionId;
-  pollAdminChat();
 
   const replyInput = document.getElementById("admin-chat-reply-input");
   const replyBtn = document.getElementById("btn-admin-reply");
   if (replyInput) replyInput.disabled = false;
   if (replyBtn) replyBtn.disabled = false;
+
+  await pollAdminChat();
+  if (replyInput) replyInput.focus();
 };
 
 function renderChatThread(conv) {
@@ -1255,7 +1310,7 @@ function renderChatThread(conv) {
   const activeMeta = document.getElementById("admin-active-chat-meta");
 
   if (activeTitle) activeTitle.textContent = `Client: ${conv.customerName || "Visitor"}`;
-  if (activeMeta) activeMeta.textContent = conv.customerPhone ? `Phone: ${conv.customerPhone}` : "Web Visitor";
+  if (activeMeta) activeMeta.textContent = conv.customerPhone ? `Phone: ${conv.customerPhone} | Email: ${conv.customerEmail || "N/A"}` : `Email: ${conv.customerEmail || "Storefront Visitor"}`;
 
   if (threadBody) {
     threadBody.innerHTML = (conv.messages || [])

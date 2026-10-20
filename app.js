@@ -2133,7 +2133,11 @@ function initLiveConciergeChat() {
       const input = document.getElementById("chat-user-input");
       if (input && query) {
         input.value = query;
-        sendForm?.dispatchEvent(new Event("submit"));
+        if (typeof sendForm?.requestSubmit === "function") {
+          sendForm.requestSubmit();
+        } else {
+          sendForm?.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+        }
       }
     });
   });
@@ -2147,12 +2151,16 @@ function initLiveConciergeChat() {
 
       input.value = "";
       const store = window.OchirStore;
-      const res = await store.sendChatMessage(text);
-      if (res.success) {
-        pollChatMessages();
-      }
+      await store.sendChatMessage(text);
+      await pollChatMessages();
+      input.focus();
     });
   }
+
+  // Initial check for unread replies on load
+  setTimeout(() => {
+    pollChatMessages();
+  }, 1000);
 }
 
 window.openLiveConciergeChat = function () {
@@ -2161,7 +2169,11 @@ window.openLiveConciergeChat = function () {
     chatWindow.hidden = false;
     chatWindow.classList.remove("is-hidden");
     chatWindow.style.display = "flex";
-    document.getElementById("chat-unread-dot")?.setAttribute("hidden", "true");
+    const unreadDot = document.getElementById("chat-unread-dot");
+    if (unreadDot) {
+      unreadDot.setAttribute("hidden", "true");
+      unreadDot.style.display = "none";
+    }
     pollChatMessages();
     startChatPolling();
     setTimeout(() => {
@@ -2174,6 +2186,19 @@ async function pollChatMessages() {
   const store = window.OchirStore;
   const messages = await store.fetchChatMessages();
   const stream = document.getElementById("chat-messages-stream");
+  const chatWindow = document.getElementById("chat-widget-window");
+  const unreadDot = document.getElementById("chat-unread-dot");
+
+  const isWindowOpen = chatWindow && !chatWindow.hidden && chatWindow.style.display !== "none" && !chatWindow.classList.contains("is-hidden");
+
+  if (!isWindowOpen && unreadDot) {
+    const hasAdminMsg = messages.some((m) => m.sender === "admin" && !m.readByCustomer);
+    if (hasAdminMsg) {
+      unreadDot.removeAttribute("hidden");
+      unreadDot.style.display = "block";
+    }
+  }
+
   if (!stream) return;
 
   stream.innerHTML = messages
@@ -2193,7 +2218,7 @@ async function pollChatMessages() {
 
 function startChatPolling() {
   stopChatPolling();
-  chatPollTimer = setInterval(pollChatMessages, 4000);
+  chatPollTimer = setInterval(pollChatMessages, 2500);
 }
 
 function stopChatPolling() {

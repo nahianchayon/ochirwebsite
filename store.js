@@ -1271,16 +1271,18 @@ class OchirStore {
 
   async fetchChatMessages() {
     const sid = this.getChatSessionId();
-    let msgs = [];
+    const msgsMap = new Map();
 
+    // 1. Fetch from Firestore if ready
     if (this.isFirestoreReady()) {
       try {
         const db = this.getFirestore();
-        const snapshot = await db.collection("chatMessages").limit(100).get();
+        const snapshot = await db.collection("chatMessages").limit(200).get();
         snapshot.forEach((doc) => {
           const data = doc.data();
-          if (data.sessionId === sid) {
-            msgs.push({ id: doc.id, ...data });
+          if (data && data.sessionId === sid) {
+            const key = doc.id || `${data.timestamp}_${data.text}`;
+            msgsMap.set(key, { id: doc.id, ...data });
           }
         });
       } catch (e) {
@@ -1288,13 +1290,32 @@ class OchirStore {
       }
     }
 
-    if (msgs.length === 0) {
+    // 2. Fetch from server API and merge
+    try {
       const res = await this.apiRequest(`/api/chat/messages?sessionId=${sid}`);
       if (res.ok && res.data && Array.isArray(res.data.messages)) {
-        msgs = res.data.messages;
+        for (const m of res.data.messages) {
+          const key = m.id || `${m.timestamp}_${m.text}`;
+          if (!msgsMap.has(key)) {
+            msgsMap.set(key, m);
+          }
+        }
+      }
+    } catch (e) {}
+
+    // 3. Preserve any local optimistic messages not yet retrieved
+    if (Array.isArray(this.chatMessages)) {
+      for (const m of this.chatMessages) {
+        if (m.sessionId === sid) {
+          const key = m.id || `${m.timestamp}_${m.text}`;
+          if (!msgsMap.has(key)) {
+            msgsMap.set(key, m);
+          }
+        }
       }
     }
 
+    const msgs = Array.from(msgsMap.values());
     msgs.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
     this.chatMessages = msgs;
     return this.chatMessages;
@@ -1303,17 +1324,30 @@ class OchirStore {
   async sendChatMessage(text, extraInfo = {}) {
     const sid = this.getChatSessionId();
     const payload = {
+      id: "msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
       sessionId: sid,
       sender: extraInfo.sender || "customer",
       senderName: (this.user && this.user.name) || extraInfo.name || "Valued Client",
       customerEmail: (this.user && this.user.email) || extraInfo.email || "",
       customerPhone: (this.user && this.user.phone) || extraInfo.phone || "",
-      text,
+      text: text.trim(),
       timestamp: new Date().toISOString(),
       readByAdmin: false,
       readByCustomer: true
     };
 
+    // Optimistic immediate append to local state
+    if (!Array.isArray(this.chatMessages)) this.chatMessages = [];
+    this.chatMessages.push(payload);
+
+    // Persist to server API first to guarantee instant availability
+    try {
+      await this.apiRequest("/api/chat/send", "POST", payload);
+    } catch (apiErr) {
+      console.warn("Server chat/send notice:", apiErr);
+    }
+
+    // Also persist to Cloud Firestore if connected
     if (this.isFirestoreReady()) {
       try {
         const db = this.getFirestore();
@@ -1323,8 +1357,6 @@ class OchirStore {
       }
     }
 
-    // Also persist to server in-memory list so message is universally available
-    this.apiRequest("/api/chat/send", "POST", payload).catch(() => {});
     await this.fetchChatMessages();
     return { success: true, message: payload };
   }
@@ -1418,29 +1450,43 @@ class OchirStore {
   }
 
   async fetchAdminChatConversations() {
-    let allMessages = [];
+    const allMessagesMap = new Map();
+
+    // 1. Fetch from Firestore if ready
     if (this.isFirestoreReady()) {
       try {
         const db = this.getFirestore();
-        const snap = await db.collection("chatMessages").limit(100).get();
+        const snap = await db.collection("chatMessages").limit(200).get();
         snap.forEach((doc) => {
-          allMessages.push({ id: doc.id, ...doc.data() });
+          const data = doc.data();
+          if (data && data.text) {
+            const key = doc.id || `${data.timestamp}_${data.text}`;
+            allMessagesMap.set(key, { id: doc.id, ...data });
+          }
         });
       } catch (e) {
         console.warn("Firestore chatMessages fetch notice:", e);
       }
     }
 
-    // Also fetch from server to merge
+    // 2. Fetch from server to merge
     try {
       const res = await this.apiRequest("/api/admin/chat/conversations");
       if (res.ok && res.data && Array.isArray(res.data.conversations)) {
-        if (allMessages.length === 0) {
-          return res.data.conversations;
+        for (const c of res.data.conversations) {
+          if (Array.isArray(c.messages)) {
+            for (const m of c.messages) {
+              const key = m.id || `${m.timestamp}_${m.text}`;
+              if (!allMessagesMap.has(key)) {
+                allMessagesMap.set(key, m);
+              }
+            }
+          }
         }
       }
     } catch (e) {}
 
+    const allMessages = Array.from(allMessagesMap.values());
     if (allMessages.length === 0) return [];
 
     // Group by sessionId
@@ -1480,15 +1526,26 @@ class OchirStore {
 
   async sendAdminChatReply(sessionId, text) {
     const replyPayload = {
+      id: "msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
       sessionId,
       sender: "admin",
       senderName: "OCHIR Concierge",
-      text,
+      text: text.trim(),
       timestamp: new Date().toISOString(),
       readByAdmin: true,
       readByCustomer: false
     };
 
+    // 1. Await persistence to server API
+    let serverOk = false;
+    try {
+      const res = await this.apiRequest("/api/admin/chat/reply", "POST", { sessionId, text });
+      serverOk = res.ok;
+    } catch (apiErr) {
+      console.warn("Server admin/chat/reply notice:", apiErr);
+    }
+
+    // 2. Also persist to Cloud Firestore if connected
     if (this.isFirestoreReady()) {
       try {
         const db = this.getFirestore();
@@ -1498,9 +1555,7 @@ class OchirStore {
       }
     }
 
-    // Also notify server in-memory list
-    this.apiRequest("/api/admin/chat/reply", "POST", { sessionId, text }).catch(() => {});
-    return { success: true, message: replyPayload };
+    return { success: true, message: replyPayload, serverOk };
   }
 
   /* ==========================================================================

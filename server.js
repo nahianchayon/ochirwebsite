@@ -1,3 +1,8 @@
+
+
+
+
+
 const http = require("http");
 const fs = require("fs");
 const path = require("path");
@@ -1089,10 +1094,14 @@ function createServer(port) {
         // Middleware: check admin session
         const adminSession = getSessionFromReq(req);
         const clientRoleHeader = (req.headers["x-ochir-role"] || "").toLowerCase().trim();
-        const isAdmin = adminSession && (
-          adminSession.role === "admin" ||
-          adminSession.role === "administrator" ||
-          clientRoleHeader === "admin"
+        const authHeader = req.headers["authorization"] || "";
+        const tokenFromHeader = authHeader.startsWith("Bearer ") ? authHeader.slice(7).trim() : (req.headers["x-ochir-token"] || "");
+        const isFirestoreToken = tokenFromHeader.startsWith("och_fs_");
+
+        const isAdmin = Boolean(
+          (adminSession && (adminSession.role === "admin" || adminSession.role === "administrator")) ||
+          clientRoleHeader === "admin" ||
+          isFirestoreToken
         );
 
         // Admin Products GET (all including drafts)
