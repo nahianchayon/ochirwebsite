@@ -1214,6 +1214,16 @@ function initChatInbox() {
       const replyBtn = document.getElementById("btn-admin-reply");
       if (replyBtn) replyBtn.disabled = true;
 
+      // Optimistically display the reply immediately in dialogue
+      const threadBody = document.getElementById("admin-chat-thread-body");
+      if (threadBody) {
+        const tempBubble = document.createElement("div");
+        tempBubble.style.cssText = "max-width:80%;padding:10px 14px;border-radius:12px;font-size:0.85rem;align-self:flex-end;background:#FF5B00;color:#ffffff;";
+        tempBubble.innerHTML = `<div>${text}</div><span style="font-size:0.65rem;opacity:0.6;display:block;margin-top:4px;">Just now · OCHIR Concierge</span>`;
+        threadBody.appendChild(tempBubble);
+        threadBody.scrollTop = threadBody.scrollHeight;
+      }
+
       try {
         const res = await store.sendAdminChatReply(activeChatSessionId, text);
         if (res && res.success) {

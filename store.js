@@ -348,7 +348,7 @@ class OchirStore {
       headers["X-Ochir-Token"] = this.token;
     }
 
-    if (this.user && (this.user.role === "admin" || this.user.role === "administrator")) {
+    if (this.canAccessAdmin()) {
       headers["X-Ochir-Role"] = "admin";
     }
 

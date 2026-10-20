@@ -1055,12 +1055,13 @@ function createServer(port) {
 
           const db = readDb();
           const messages = (db.chatMessages || []).filter((m) => m.sessionId === sessionId);
+          messages.forEach((m) => { if (m.sender === "admin") m.readByCustomer = true; });
           return sendJson(res, 200, { success: true, messages });
         }
 
         if (cleanUrl === "/api/chat/send" && req.method === "POST") {
           const body = await parseBody(req);
-          const { sessionId, sender, senderName, text, customerEmail, customerPhone } = body;
+          const { sessionId, sender, senderName, text, customerEmail, customerPhone, id } = body;
 
           if (!sessionId || !text) {
             return sendJson(res, 400, { success: false, message: "Session ID and message text are required." });
@@ -1070,7 +1071,7 @@ function createServer(port) {
           if (!Array.isArray(db.chatMessages)) db.chatMessages = [];
 
           const newMsg = {
-            id: "msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+            id: id || ("msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000)),
             sessionId,
             sender: sender || "customer",
             senderName: senderName || "Visitor",
@@ -1418,7 +1419,7 @@ function createServer(port) {
         if (cleanUrl === "/api/admin/chat/reply" && req.method === "POST") {
           if (!isAdmin) return sendJson(res, 403, { success: false, message: "Admin clearance required." });
           const body = await parseBody(req);
-          const { sessionId, text } = body;
+          const { sessionId, text, id } = body;
 
           if (!sessionId || !text) {
             return sendJson(res, 400, { success: false, message: "sessionId and text required." });
@@ -1435,7 +1436,7 @@ function createServer(port) {
           });
 
           const replyMsg = {
-            id: "msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000),
+            id: id || ("msg-" + Date.now() + "-" + Math.floor(Math.random() * 1000)),
             sessionId,
             sender: "admin",
             senderName: "OCHIR Concierge",

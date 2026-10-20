@@ -82,8 +82,13 @@
           </button>
           <button type="button" class="admin-nav-item" data-view="customers">
             <span class="nav-icon">👥</span>
-            <span>Clients &amp; Inquiries</span>
-            <span class="admin-badge" id="sidebar-inq-badge">2</span>
+            <span>Users &amp; Clients</span>
+            <span class="admin-badge" id="sidebar-users-badge">0</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-view="chat">
+            <span class="nav-icon">💬</span>
+            <span>Live Concierge Chat</span>
+            <span class="admin-badge" id="sidebar-inq-badge">0</span>
           </button>
           <button type="button" class="admin-nav-item" data-view="settings">
             <span class="nav-icon">⚙️</span>
@@ -266,12 +271,68 @@
           </div>
         </section>
 
-        <!-- ================= VIEW 4: CLIENTS & INQUIRIES ================= -->
+        <!-- ================= VIEW 4: USERS & CLIENTS ================= -->
         <section class="admin-view" id="view-customers" hidden>
           <div class="admin-view-header">
             <div>
-              <span class="micro-badge"><span class="badge-dot"></span> DIRECT CONCIERGE &amp; CLIENTELE</span>
-              <h1 class="admin-view-title">Clients &amp; Live Concierge Inbox</h1>
+              <span class="micro-badge"><span class="badge-dot"></span> CLIENTELE DIRECTORY &amp; PRIVILEGES</span>
+              <h1 class="admin-view-title">Users &amp; Client Management</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-secondary" id="btn-refresh-users">⟳ Refresh Users</button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="table-toolbar">
+            <div class="table-search-box">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="users-search-input"
+                class="table-search-input"
+                placeholder="Search by User Name, Email, or Phone..."
+              />
+            </div>
+            <div class="filter-pills-row" id="user-role-filters">
+              <button type="button" class="filter-pill is-active" data-role="All">All Users (<span id="user-count-all">0</span>)</button>
+              <button type="button" class="filter-pill" data-role="admin">Administrators (<span id="user-count-admin">0</span>)</button>
+              <button type="button" class="filter-pill" data-role="customer">Clients (<span id="user-count-clients">0</span>)</button>
+            </div>
+          </div>
+
+          <!-- Users Data Table -->
+          <div class="data-table-card">
+            <div class="table-responsive">
+              <table class="data-table" id="users-table">
+                <thead>
+                  <tr>
+                    <th>Client / User</th>
+                    <th>Email Address</th>
+                    <th>Phone</th>
+                    <th>Role &amp; Privilege</th>
+                    <th>Registered Date</th>
+                    <th>Orders Placed</th>
+                    <th style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="users-tbody">
+                  <!-- Populated dynamically by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 5: LIVE CONCIERGE CHAT INBOX ================= -->
+        <section class="admin-view" id="view-chat" hidden>
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> REAL-TIME CLIENT CONCIERGE</span>
+              <h1 class="admin-view-title">Live Concierge Chat Inbox</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-secondary" id="btn-refresh-admin-chat">⟳ Refresh Conversations</button>
             </div>
           </div>
 
@@ -279,7 +340,7 @@
             <!-- Left Panel: Live Chat Conversations -->
             <div class="admin-card">
               <div class="card-header">
-                <h3>Customer Chat Conversations</h3>
+                <h3>Customer Conversations</h3>
                 <span class="live-dot" title="Live stream active"></span>
               </div>
               <div class="inquiry-list" id="admin-chat-conv-list">
@@ -293,7 +354,7 @@
                 <h3 id="admin-active-chat-title">Conversation Thread</h3>
                 <span class="card-sub-info" id="admin-active-chat-meta">Select a client on the left</span>
               </div>
-              <div id="admin-chat-thread-body" style="height:320px;overflow-y:auto;padding:14px;background:#16171b;border-radius:10px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;">
+              <div id="admin-chat-thread-body" style="height:340px;overflow-y:auto;padding:14px;background:#16171b;border-radius:10px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;">
                 <p style="color:#86868b;text-align:center;margin:auto;">Select a conversation to inspect dialogue and respond.</p>
               </div>
               <form id="admin-chat-reply-form" style="display:flex;gap:8px;">
