@@ -1,0 +1,444 @@
+{
+  "users": [
+    {
+      "id": "usr-admin-01",
+      "email": "admin@ochir.com",
+      "name": "Atelier Master Admin",
+      "phone": "+8801335852121",
+      "role": "admin",
+      "passwordSalt": "c238705b135e1b5fba60c463ac55f790",
+      "passwordHash": "2f47fbdfddac7e32e4df44a9b5b2f2458b40adbba668d64b6c826afb14264961eadd215405f36e58a892cdced55415e13d436c4774e5cc83c99199feda033fea",
+      "verified": true,
+      "addresses": [],
+      "wishlist": [],
+      "createdAt": "2026-10-19T00:00:00.000Z"
+    },
+    {
+      "id": "usr-demo-01",
+      "email": "customer@ochir.com",
+      "name": "Alistair Vance",
+      "phone": "+8801711928374",
+      "role": "customer",
+      "passwordSalt": "c238705b135e1b5fba60c463ac55f790",
+      "passwordHash": "2f47fbdfddac7e32e4df44a9b5b2f2458b40adbba668d64b6c826afb14264961eadd215405f36e58a892cdced55415e13d436c4774e5cc83c99199feda033fea",
+      "verified": true,
+      "addresses": [
+        {
+          "id": "addr-1",
+          "label": "Primary Residence",
+          "recipient": "Alistair Vance",
+          "phone": "+8801711928374",
+          "address": "House 14, Road 11, Block D",
+          "district": "Dhaka",
+          "area": "Banani"
+        }
+      ],
+      "wishlist": [],
+      "createdAt": "2026-10-19T00:00:00.000Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "och-prod-01",
+      "title": "The Ochir Chronograph 40mm",
+      "slug": "the-ochir-chronograph-40mm",
+      "subtitle": "Swiss Mechanical Column-Wheel Caliber · Marine 316L Steel",
+      "category": "timepieces",
+      "subcategory": "Mechanical Chronographs",
+      "basePrice": 175000,
+      "comparePrice": 195000,
+      "stock": 7,
+      "sku": "OCH-CHR-01",
+      "status": "published",
+      "flags": {
+        "featured": true,
+        "limitedEdition": true,
+        "newArrival": true,
+        "soldOut": false
+      },
+      "story": "Precision in its most reduced form. Crafted with a sculpted 40mm surgical 316L stainless steel case, exhibition sapphire crystal caseback, and recessed dual subdials. Regulated across five positions in Zurich for chronometer precision, paired with full-grain Tuscan Vachetta leather.",
+      "specs": {
+        "caseDiameter": "40 mm",
+        "caseThickness": "10.4 mm",
+        "movement": "Swiss Mechanical Column-Wheel Automatic Caliber",
+        "powerReserve": "48 Hours",
+        "crystal": "Anti-Reflective Double-Domed Sapphire",
+        "waterResistance": "10 ATM (100 Meters)",
+        "strapLugWidth": "20 mm"
+      },
+      "variants": {
+        "dials": [
+          "Matte Obsidian",
+          "Slate Grey",
+          "Sand Silver"
+        ],
+        "straps": [
+          "Tuscan Saddle Tan",
+          "Nero Black Leather",
+          "Steel Milanese Mesh"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=85",
+          "https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.816Z"
+    },
+    {
+      "id": "och-prod-02",
+      "title": "The Atelier Mechanical 39mm",
+      "slug": "the-atelier-mechanical-39mm",
+      "subtitle": "Ultra-Slim Mechanical Caliber · Brushed Titanium Bezel",
+      "category": "timepieces",
+      "subcategory": "Dress Watches",
+      "basePrice": 160000,
+      "comparePrice": 180000,
+      "stock": 5,
+      "sku": "OCH-ATM-02",
+      "status": "published",
+      "flags": {
+        "featured": true,
+        "limitedEdition": true,
+        "newArrival": false,
+        "soldOut": false
+      },
+      "story": "A pure architectural study in quiet permanence. Profile reduced to 8.8mm thickness. Powered by a high-beat Swiss caliber with 28,800 vibrations per hour and a hand-finished tungsten rotor.",
+      "specs": {
+        "caseDiameter": "39 mm",
+        "caseThickness": "8.8 mm",
+        "movement": "Ultra-Slim Swiss Mechanical Caliber",
+        "powerReserve": "42 Hours",
+        "crystal": "Scratch-Proof Flat Sapphire",
+        "waterResistance": "5 ATM (50 Meters)",
+        "strapLugWidth": "20 mm"
+      },
+      "variants": {
+        "dials": [
+          "Deep Slate",
+          "Parchment White"
+        ],
+        "straps": [
+          "Horween Cordovan Black",
+          "Brushed 316L Link Bracelet"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=85",
+          "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.817Z"
+    },
+    {
+      "id": "och-prod-03",
+      "title": "The Daily Card Case",
+      "slug": "the-daily-card-case",
+      "subtitle": "Tuscan Vachetta Leather · Hand-Burnished Beeswax Edges",
+      "category": "wallets",
+      "subcategory": "Cardholders",
+      "basePrice": 28000,
+      "comparePrice": 32000,
+      "stock": 13,
+      "sku": "OCH-L-01",
+      "status": "published",
+      "flags": {
+        "featured": true,
+        "limitedEdition": false,
+        "newArrival": false,
+        "soldOut": false
+      },
+      "story": "Hand-cut from full-grain Tuscan vegetable-tanned leather steeped in natural chestnut and mimosa tannins. Six dedicated card slots surrounding a central bills compartment. Hand-sewn with French waxed linen thread.",
+      "specs": {
+        "dimensions": "102 mm × 72 mm × 4 mm",
+        "capacity": "6–10 Cards + Folded Bills",
+        "leather": "100% Certified Italian Vegetable Vachetta",
+        "edgeFinish": "Hand-Burnished with Natural Beeswax",
+        "stitching": "Fil Au Chinois Waxed Linen Thread"
+      },
+      "variants": {
+        "colors": [
+          "Natural Saddle Tan",
+          "Espresso Dark Brown",
+          "Nero Black"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.817Z"
+    },
+    {
+      "id": "och-prod-04",
+      "title": "The Atelier Bifold Wallet",
+      "slug": "the-atelier-bifold-wallet",
+      "subtitle": "Slim Architectural Profile · RFID Protected Lining",
+      "category": "wallets",
+      "subcategory": "Bifolds",
+      "basePrice": 38000,
+      "comparePrice": 42000,
+      "stock": 7,
+      "sku": "OCH-L-02",
+      "status": "published",
+      "flags": {
+        "featured": true,
+        "limitedEdition": false,
+        "newArrival": true,
+        "soldOut": false
+      },
+      "story": "A modern reimagining of the classic bifold wallet. Reduced to 6.5mm thickness when loaded. Features eight staggered card slots, dual concealed receipt slots, and a full-length currency divider lined with woven raw silk and electromagnetic RFID shielding.",
+      "specs": {
+        "dimensions": "110 mm × 88 mm × 6.5 mm",
+        "capacity": "8–14 Cards + Full Currencies",
+        "leather": "Grade-A Tuscan Vegetable-Tanned Cowhide",
+        "protection": "Certified RFID Signal Attenuation",
+        "stitching": "Traditional Saddle Stitch"
+      },
+      "variants": {
+        "colors": [
+          "Chestnut Cognac",
+          "Obsidian Black",
+          "Olive Patina"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.817Z"
+    },
+    {
+      "id": "och-prod-05",
+      "title": "The Sculpted Steel Cuff",
+      "slug": "the-sculpted-steel-cuff",
+      "subtitle": "Surgical 316L Stainless Steel · Ergonomic Inner Ellipse",
+      "category": "accessories",
+      "subcategory": "Bracelets & Cuffs",
+      "basePrice": 46000,
+      "comparePrice": 52000,
+      "stock": 11,
+      "sku": "OCH-A-01",
+      "status": "published",
+      "flags": {
+        "featured": true,
+        "limitedEdition": true,
+        "newArrival": false,
+        "soldOut": false
+      },
+      "story": "A continuous line in solid 316L surgical stainless steel. Sculpted with an anatomical inner ellipse that mirrors the natural anatomy of the human wrist, eliminating pinch points. Finished by hand with longitudinal brush strokes and mirror-polished beveled edges.",
+      "specs": {
+        "width": "8.5 mm",
+        "thickness": "3.2 mm",
+        "material": "Solid 316L Marine Surgical Stainless Steel",
+        "finish": "Hand-Brushed Satin with Mirror Chamfer",
+        "weight": "44 grams",
+        "sizing": "S (160mm) / M (175mm) / L (190mm)"
+      },
+      "variants": {
+        "finishes": [
+          "Brushed Surgical Steel",
+          "Obsidian Matte DLC",
+          "Vintage Champagne Gold"
+        ],
+        "sizes": [
+          "Small (58mm)",
+          "Medium (62mm)",
+          "Large (66mm)"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.817Z"
+    },
+    {
+      "id": "och-prod-06",
+      "title": "Titanium Torque Bracelet",
+      "slug": "titanium-torque-bracelet",
+      "subtitle": "Aerospace Grade 5 Titanium · Ultra-Lightweight (18g)",
+      "category": "accessories",
+      "subcategory": "Bracelets & Cuffs",
+      "basePrice": 54000,
+      "comparePrice": 62000,
+      "stock": 3,
+      "sku": "OCH-A-02",
+      "status": "published",
+      "flags": {
+        "featured": false,
+        "limitedEdition": true,
+        "newArrival": true,
+        "soldOut": false
+      },
+      "story": "Milled from aerospace-grade Ti-6Al-4V titanium. Stronger than steel yet featherlight at 18 grams. Immune to saltwater and sweat. Finished with laser-micro-etched Ochir technical coordinates on the interior curve.",
+      "specs": {
+        "width": "6.0 mm",
+        "thickness": "2.8 mm",
+        "material": "Grade 5 Aerospace Titanium (Ti-6Al-4V)",
+        "finish": "Raw Vapor-Blasted Matte Titanium",
+        "weight": "18 grams",
+        "sizing": "Universal Tension Fit"
+      },
+      "variants": {
+        "finishes": [
+          "Raw Vapor Titanium",
+          "Anodized Midnight Blue"
+        ]
+      },
+      "images": {
+        "primary": "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85",
+        "alternate": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=1200&q=85",
+        "gallery": [
+          "https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85"
+        ]
+      },
+      "createdAt": "2026-10-19T08:38:31.817Z"
+    }
+  ],
+  "orders": [
+    {
+      "id": "OCH-2026-5169",
+      "userId": "usr-demo-01",
+      "createdAt": "2026-10-19T08:51:54.967Z",
+      "status": "Confirmed",
+      "paymentStatus": "Verified",
+      "paymentMethod": "bKash",
+      "paymentDetails": {
+        "senderPhone": "01711928374",
+        "trxId": "BKASH9284710"
+      },
+      "customer": {
+        "name": "Alistair Vance",
+        "email": "customer@ochir.com",
+        "phone": "01711928374",
+        "address": "House 14, Road 11, Block D",
+        "district": "Dhaka City",
+        "area": "Banani",
+        "instructions": "Deliver to front desk concierge"
+      },
+      "items": [
+        {
+          "productId": "och-prod-03",
+          "title": "The Daily Card Case",
+          "sku": "OCH-L-01",
+          "unitPrice": 28000,
+          "qty": 1,
+          "lineTotal": 28000,
+          "variant": "Natural Saddle Tan",
+          "engraving": "A.V.",
+          "image": "https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85"
+        }
+      ],
+      "subtotal": 28000,
+      "discount": 0,
+      "couponCode": null,
+      "shippingFee": 0,
+      "total": 28000,
+      "currency": "BDT",
+      "courierName": "",
+      "trackingNumber": "",
+      "adminNotes": "",
+      "timeline": [
+        {
+          "time": "2026-10-19T08:51:54.967Z",
+          "status": "Order Submitted",
+          "note": "Order placed via bKash. Total: ৳28,000."
+        },
+        {
+          "time": "2026-10-19T08:51:55.060Z",
+          "status": "Payment: Verified",
+          "note": "bKash Transaction ID confirmed."
+        }
+      ]
+    }
+  ],
+  "chatMessages": [
+    {
+      "id": "msg-1792399915076-19",
+      "sessionId": "test_session_123",
+      "sender": "customer",
+      "senderName": "Alistair Vance",
+      "customerEmail": "",
+      "customerPhone": "",
+      "text": "Hello, please confirm dispatch timing for my cardholder.",
+      "timestamp": "2026-10-19T08:51:55.076Z",
+      "readByAdmin": true,
+      "readByCustomer": true
+    },
+    {
+      "id": "msg-1792399915091-833",
+      "sessionId": "test_session_123",
+      "sender": "admin",
+      "senderName": "OCHIR Concierge",
+      "text": "Greetings Dr. Vance. Your cardholder has been regulated and packed. Handover scheduled for tomorrow morning.",
+      "timestamp": "2026-10-19T08:51:55.091Z",
+      "readByAdmin": true,
+      "readByCustomer": false
+    }
+  ],
+  "coupons": [
+    {
+      "code": "OCHIR10",
+      "discountPercent": 10,
+      "minOrder": 1000,
+      "active": true
+    },
+    {
+      "code": "ATELIER500",
+      "discountFlat": 500,
+      "minOrder": 3000,
+      "active": true
+    }
+  ],
+  "settings": {
+    "storeName": "Ochir Atelier",
+    "storeStatus": "operational",
+    "currency": "BDT",
+    "currencySymbol": "৳",
+    "whatsappNumber": "01335852121",
+    "whatsappPrefill": "Hello OCHIR, I need help with a product or order.",
+    "phone": "+880 1335 852121",
+    "email": "concierge@ochir.com",
+    "address": "Banani Atelier, Road 11, Dhaka, Bangladesh",
+    "deliveryChargeInside": 80,
+    "deliveryChargeOutside": 150,
+    "freeDeliveryThreshold": 5000,
+    "paymentMethods": {
+      "bkash": {
+        "enabled": true,
+        "number": "01335852121",
+        "type": "Personal / Merchant",
+        "instructions": "Send Money or Make Payment to 01335852121 via bKash App or *247#. Copy the Transaction ID (TrxID) and enter it with your bKash sender number below."
+      },
+      "rocket": {
+        "enabled": true,
+
+        "number": "01335852121-8",
+        "type": "Personal",
+        "instructions": "Send Money to Rocket account 01335852121-8 via Rocket App or *322#. Enter your 12-digit Rocket sender phone and TrxID below."
+      },
+      "cod": {
+        "enabled": true,
+        "instructions": "Cash on Delivery is available across Bangladesh. White-glove handover with parcel inspection before cash payment."
+      }
+    },
+    "bannerText": "Complimentary insured delivery across Bangladesh on orders over ৳5,000.",
+    "returnPolicy": "Every Ochir piece is backed by our 7-day inspection and lifetime craftsmanship guarantee."
+  }
+}

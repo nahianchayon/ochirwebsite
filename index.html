@@ -1,0 +1,2270 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#fbfbfd" />
+    <meta
+      name="description"
+      content="Ochir — Quiet luxury timepieces, handcrafted Italian leather goods, and minimalist accessories. Engineered with precision, designed to outlive seasons."
+    />
+    <title>OCHIR — Understated Form. Permanent Value.</title>
+
+    <!-- Apple-grade Neo-Grotesque Typography: Inter (SF Pro equivalent) & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Firebase App & Cloud Firestore SDK (Compat v10 for zero-build universal support) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Shared Store Engine -->
+    <script src="store.js"></script>
+    <script src="admin.js" defer></script>
+    <script src="app.js" defer></script>
+  </head>
+  <body class="site-body">
+    <!-- Atmospheric Ambient Micro-Particle Canvas -->
+    <canvas id="ambient-stardust-canvas" class="ambient-stardust-canvas" aria-hidden="true"></canvas>
+
+    <!-- Top Curated Logistics Bar -->
+    <aside class="system-bar" aria-label="Announcement & Curated Logistics">
+      <div class="system-bar-inner">
+        <div class="system-pill">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span class="system-text">AUTUMN / WINTER 2026: <strong>CHAPTER 01 AVAILABLE</strong></span>
+        </div>
+        <div class="system-telemetry">
+          <span>COMPLIMENTARY WORLDWIDE DELIVERY</span>
+          <span class="divider">/</span>
+          <span>SWISS MECHANICAL MOVEMENTS</span>
+          <span class="divider">/</span>
+          <span>TUSCAN VACHETTA LEATHER</span>
+          <span class="divider">/</span>
+          <span>SURGICAL 316L STEEL</span>
+        </div>
+        <div class="system-actions">
+          <button type="button" class="spec-sheet-btn" id="track-order-top-btn" aria-label="Track existing order">
+            <span>Track Order</span> <span>↗</span>
+          </button>
+          <button type="button" class="spec-sheet-btn admin-link-pill" id="topbar-admin-room-btn" hidden style="display:none;" aria-label="Open Admin Control Room">
+            <span>⚡ Control Room</span>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Sticky Floating Apple-Style Luxury Header -->
+    <header class="site-header" id="top">
+      <div class="header-container">
+        <!-- Brand Mark -->
+        <a class="brand-mark" href="#top" aria-label="Ochir Flagship Store">
+          <span class="brand-title">OCHIR<span class="brand-sub">®</span></span>
+        </a>
+
+        <nav class="desktop-nav" aria-label="Primary navigation">
+          <a href="#atelier-showcase" class="nav-link">Collection</a>
+          <a href="#collection" class="nav-link nav-shop-link" data-filter="all">View Shop</a>
+        </nav>
+
+        <!-- Header Actions: Currency Selector, WhatsApp, Account & Bag Trigger -->
+        <div class="header-controls">
+          <a
+            href="https://wa.me/8801335852121?text=Hello%20OCHIR,%20I%20need%20help%20with%20a%20product%20or%20order."
+            target="_blank"
+            rel="noopener"
+            class="header-whatsapp-pill"
+            aria-label="Direct WhatsApp Concierge"
+          >
+            <span>💬 01335852121</span>
+          </a>
+
+          <div class="currency-picker-wrap">
+            <select id="currency-select" class="currency-select-header" aria-label="Select currency">
+              <option value="BDT" selected>BDT (৳)</option>
+              <option value="USD">USD ($)</option>
+              <option value="EUR">EUR (€)</option>
+              <option value="GBP">GBP (£)</option>
+            </select>
+          </div>
+
+          <div class="header-role-switcher" id="header-role-switcher" hidden style="display:none;">
+            <button type="button" class="header-role-btn is-active" id="header-btn-role-user" title="Switch to Client View">👤 User</button>
+            <button type="button" class="header-role-btn" id="header-btn-role-admin" title="Switch to Admin Operations">⚡ Admin</button>
+            <button type="button" class="header-control-room-btn" id="header-btn-open-control-room" hidden style="display:none;" title="Open Admin Control Room">
+              <span>⚡ Control Room</span>
+            </button>
+          </div>
+
+          <button class="header-account-btn" type="button" id="header-account-btn" aria-label="Client Account">
+            <span class="user-initials" id="header-user-avatar">?</span>
+            <span id="header-account-label">Sign In</span>
+          </button>
+
+          <button class="quote-trigger-btn cart-open-btn" type="button" id="header-cart-btn" aria-label="Open shopping bag">
+            <span>Bag</span>
+            <span class="cart-badge-count" id="header-cart-count">0</span>
+            <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">
+              <path d="M4 5V3.5C4 2.11929 5.11929 1 6.5 1H9.5C10.8807 1 12 2.11929 12 3.5V5M2 5H14L13 14H3L2 5Z" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+
+          <button class="mobile-toggle" type="button" aria-label="Open mobile menu" aria-expanded="false">
+            <span class="burger-bars"><i></i><i></i><i></i></span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <!-- ================= SECTION A: HERO CHAPTER (APPLE-GRADE EDITORIAL) ================= -->
+      <section class="hero-section" aria-labelledby="hero-heading">
+        <div class="hero-container">
+          <!-- Left Column: Editorial Presentation -->
+          <div class="hero-content">
+            <div class="micro-badge">
+              <span>ATELIER EDITION · 2026</span>
+            </div>
+
+            <h1 id="hero-heading" class="hero-title">
+              Understated form.<br />
+              <span class="text-sub-headline">Permanent value.</span>
+            </h1>
+
+            <p class="hero-lead">
+              Ochir designs considered objects for a life well lived. Fine mechanical chronographs,
+              handcrafted Italian vegetable-tanned leather, and sculptural marine steel accessories—made
+              with exacting hands, quiet confidence, and zero planned obsolescence.
+            </p>
+
+            <div class="hero-cta-cluster">
+              <a href="#collection" class="btn btn-primary" id="hero-explore-btn">
+                <span>Explore Collection</span>
+              </a>
+              <a href="#manifesto" class="hero-text-link" id="hero-philosophy-btn">
+                <span>The Ochir Philosophy</span>
+                <span class="chevron-icon" aria-hidden="true">›</span>
+              </a>
+            </div>
+
+            <!-- Precision Craft Metric Row -->
+            <div class="hero-metrics-grid">
+              <div class="metric-card">
+                <span class="metric-val">40<small>mm</small></span>
+                <span class="metric-lbl">Swiss Mechanical Column-Wheel</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-val">100%</span>
+                <span class="metric-lbl">Tuscan Certified Vachetta Leather</span>
+              </div>
+              <div class="metric-card">
+                <span class="metric-val">316L</span>
+                <span class="metric-lbl">Marine Surgical Stainless Steel</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Interactive Living Product Showcase Stage -->
+          <div class="hero-stage">
+            <div class="atelier-showcase-wrap" id="atelier-showcase" role="region" aria-label="Interactive Ochir Product Showcase">
+              <!-- Ambient Subtle Studio Shimmer -->
+              <div class="showcase-ambient-glow" aria-hidden="true"></div>
+              <div class="showcase-particles" id="showcase-particles" aria-hidden="true"></div>
+
+              <!-- Top Bar: Segmented Perspective Switcher -->
+              <div class="showcase-header">
+                <div class="showcase-brand-tag">
+                  <span class="live-indicator"></span>
+                  <span class="brand-edition" id="showcase-status-text">THE OCHIR TRILOGY · 2026</span>
+                </div>
+
+                <!-- Apple-Grade Segmented Control Tabs -->
+                <div class="showcase-tabs" role="tablist" aria-label="Showcase Perspective">
+                  <button type="button" class="showcase-tab is-active" data-view="trilogy" role="tab" aria-selected="true" title="View All Three Iconic Pieces">
+                    <span class="tab-icon">✦</span>
+                    <span class="tab-label">Trilogy</span>
+                  </button>
+                  <button type="button" class="showcase-tab" data-view="watch" role="tab" aria-selected="false" title="Inspect The Ochir Chronograph">
+                    <span class="tab-icon">⌚</span>
+                    <span class="tab-label">Watch</span>
+                  </button>
+                  <button type="button" class="showcase-tab" data-view="wallet" role="tab" aria-selected="false" title="Inspect Atelier Bifold Wallet">
+                    <span class="tab-icon">👝</span>
+                    <span class="tab-label">Wallet</span>
+                  </button>
+                  <button type="button" class="showcase-tab" data-view="cuff" role="tab" aria-selected="false" title="Inspect Sculpted Steel Cuff">
+                    <span class="tab-icon">◯</span>
+                    <span class="tab-label">Cuff</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Main Stage Display Container -->
+              <div class="showcase-stage-area" id="showcase-stage-area">
+
+                <!-- VIEW 1: THE TRILOGY (Interactive 3D Layered Arrangement) -->
+                <div class="stage-view-panel is-active" id="view-trilogy">
+                  <div class="trilogy-parallax-stage" id="trilogy-parallax-stage">
+                    
+                    <!-- Floating Piece 1: The Wallet (Left Depth Layer) -->
+                    <div class="floating-item-card item-wallet" data-target-view="wallet" role="button" tabindex="0" aria-label="Inspect Atelier Bifold Wallet">
+                      <div class="item-card-inner">
+                        <div class="item-badge-pill">ITALIAN VACHETTA</div>
+                        <div class="item-media-container">
+                          <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800&q=85" alt="Handcrafted Italian Leather Wallet" class="item-img" />
+                          <div class="media-sheen"></div>
+                        </div>
+                        <div class="item-meta-overlay">
+                          <span class="item-name">The Atelier Bifold</span>
+                          <span class="item-price">Tuscan Vachetta</span>
+                        </div>
+                        <div class="hotspot-pulse" style="top: 28%; right: 26%;" title="Hand-Burnished Beeswax Edge">
+                          <span class="pulse-ring"></span>
+                          <span class="pulse-dot"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Floating Piece 2: The Chronograph 40mm (Center Hero Layer) -->
+                    <div class="floating-item-card item-watch is-hero-center" data-target-view="watch" role="button" tabindex="0" aria-label="Inspect The Ochir Chronograph 40mm">
+                      <div class="item-card-inner">
+                        <div class="item-badge-pill hero-badge">SWISS MECHANICAL · 40MM</div>
+                        <div class="item-media-container watch-media-container">
+                          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=85" alt="The Ochir Chronograph 40mm Watch" class="item-img" />
+                          <!-- Live Animated Sweeping Mechanical Watch Overlay -->
+                          <div class="watch-clockwork-overlay" aria-hidden="true">
+                            <div class="clock-dial-center">
+                              <div class="clock-hand hand-hour" id="clock-hand-hour"></div>
+                              <div class="clock-hand hand-minute" id="clock-hand-minute"></div>
+                              <div class="clock-hand hand-second" id="clock-hand-second"></div>
+                              <div class="clock-center-pin"></div>
+                            </div>
+                          </div>
+                          <div class="media-sheen sweep-animation"></div>
+                        </div>
+                        <div class="item-meta-overlay">
+                          <div class="meta-left">
+                            <span class="item-name">The Ochir Chronograph</span>
+                            <span class="item-sub">Surgical 316L Stainless Steel</span>
+                          </div>
+                          <span class="item-price">Swiss Caliber</span>
+                        </div>
+                        <div class="hotspot-pulse" style="top: 40%; left: 45%;" title="Column-Wheel Mechanical Caliber">
+                          <span class="pulse-ring"></span>
+                          <span class="pulse-dot"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <!-- Floating Piece 3: The Cuff (Right Depth Layer) -->
+                    <div class="floating-item-card item-cuff" data-target-view="cuff" role="button" tabindex="0" aria-label="Inspect Sculpted Steel Cuff">
+                      <div class="item-card-inner">
+                        <div class="item-badge-pill">316L MARINE STEEL</div>
+                        <div class="item-media-container">
+                          <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=800&q=85" alt="Sculpted Steel Cuff Bracelet" class="item-img" />
+                          <div class="media-sheen"></div>
+                        </div>
+                        <div class="item-meta-overlay">
+                          <span class="item-name">The Sculpted Cuff</span>
+                          <span class="item-price">Marine 316L</span>
+                        </div>
+                        <div class="hotspot-pulse" style="bottom: 30%; left: 32%;" title="Ergonomic Inner Wrist Ellipse">
+                          <span class="pulse-ring"></span>
+                          <span class="pulse-dot"></span>
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
+
+                <!-- VIEW 2: SOLO WATCH MACRO CLOSE-UP -->
+                <div class="stage-view-panel" id="view-watch">
+                  <div class="solo-showcase-grid">
+                    <div class="solo-media-stage">
+                      <div class="solo-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=85" alt="The Ochir Chronograph 40mm" class="solo-img" id="solo-watch-img" />
+                        <div class="lens-glimmer" aria-hidden="true"></div>
+                        <!-- Macro Mechanical Clockwork Overlay -->
+                        <div class="watch-clockwork-overlay macro-overlay" aria-hidden="true">
+                          <div class="clock-dial-center">
+                            <div class="clock-hand hand-hour" id="macro-hand-hour"></div>
+                            <div class="clock-hand hand-minute" id="macro-hand-minute"></div>
+                            <div class="clock-hand hand-second" id="macro-hand-second"></div>
+                            <div class="clock-center-pin"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="solo-info-panel">
+                      <div class="solo-kicker">TIMEPIECE · CHAPTER 01</div>
+                      <h3 class="solo-title">The Ochir Chronograph 40mm</h3>
+                      <p class="solo-desc">
+                        Surgical 316L stainless steel case with double-domed sapphire crystal. Regulated across 5 positions
+                        with a Swiss column-wheel automatic caliber and Tuscan Vachetta leather strap.
+                      </p>
+                      <div class="solo-spec-row">
+                        <div class="spec-chip"><strong>40 mm</strong> Case</div>
+                        <div class="spec-chip"><strong>10.4 mm</strong> Profile</div>
+                        <div class="spec-chip"><strong>10 ATM</strong> Water Res.</div>
+                        <div class="spec-chip"><strong>28,800</strong> VPH</div>
+                      </div>
+                      <!-- Dial Variant Picker -->
+                      <div class="variant-picker-group">
+                        <span class="picker-label">Dial Finish:</span>
+                        <div class="picker-swatches" id="watch-swatches">
+                          <button type="button" class="color-swatch is-active" data-src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=1200&q=85" title="Matte Obsidian" style="background: #141619;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1200&q=85" title="Sand Silver" style="background: #d4d8de;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1200&q=85" title="Slate Grey" style="background: #484b54;"></button>
+                        </div>
+                      </div>
+                      <div class="solo-actions">
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-acquire-watch">
+                          <span>Acquire Chronograph ↗</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-inspect-watch">
+                          <span>Specifications →</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- VIEW 3: SOLO WALLET CLOSE-UP -->
+                <div class="stage-view-panel" id="view-wallet">
+                  <div class="solo-showcase-grid">
+                    <div class="solo-media-stage">
+                      <div class="solo-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85" alt="The Atelier Bifold Wallet" class="solo-img" id="solo-wallet-img" />
+                        <div class="leather-sheen" aria-hidden="true"></div>
+                      </div>
+                    </div>
+                    <div class="solo-info-panel">
+                      <div class="solo-kicker">LEATHER GOODS · TUSCANY</div>
+                      <h3 class="solo-title">The Atelier Bifold Wallet</h3>
+                      <p class="solo-desc">
+                        Grade-A Italian certified vegetable-tanned cowhide. Hand-burnished beeswax edges and
+                        traditional two-needle saddle-stitching that will never unravel. 6.5mm profile when loaded.
+                      </p>
+                      <div class="solo-spec-row">
+                        <div class="spec-chip"><strong>100%</strong> Tuscan Hide</div>
+                        <div class="spec-chip"><strong>6.5 mm</strong> Slim</div>
+                        <div class="spec-chip"><strong>8 Cards</strong> Capacity</div>
+                        <div class="spec-chip"><strong>RFID</strong> Silk Shield</div>
+                      </div>
+                      <!-- Leather Variant Picker -->
+                      <div class="variant-picker-group">
+                        <span class="picker-label">Leather Tone:</span>
+                        <div class="picker-swatches" id="wallet-swatches">
+                          <button type="button" class="color-swatch is-active" data-src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=1200&q=85" title="Saddle Tan" style="background: #a46132;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=1200&q=85" title="Chestnut Cognac" style="background: #5c2f16;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1559563458-527698bf5295?auto=format&fit=crop&w=1200&q=85" title="Nero Black" style="background: #18191b;"></button>
+                        </div>
+                      </div>
+                      <div class="solo-actions">
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-acquire-wallet">
+                          <span>Acquire Bifold ↗</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-inspect-wallet">
+                          <span>Specifications →</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- VIEW 4: SOLO CUFF & BRACELET CLOSE-UP -->
+                <div class="stage-view-panel" id="view-cuff">
+                  <div class="solo-showcase-grid">
+                    <div class="solo-media-stage">
+                      <div class="solo-img-wrap">
+                        <img src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=85" alt="The Sculpted Steel Cuff" class="solo-img" id="solo-cuff-img" />
+                        <div class="steel-specular-glint" aria-hidden="true"></div>
+                      </div>
+                    </div>
+                    <div class="solo-info-panel">
+                      <div class="solo-kicker">ACCESSORIES · 316L STEEL</div>
+                      <h3 class="solo-title">The Sculpted Steel Cuff</h3>
+                      <p class="solo-desc">
+                        A continuous sculptural line in solid 316L marine surgical steel. Anatomical inner
+                        ellipse conforms comfortably to the human wrist. Hand-brushed satin with mirror chamfer.
+                      </p>
+                      <div class="solo-spec-row">
+                        <div class="spec-chip"><strong>316L</strong> Surgical Steel</div>
+                        <div class="spec-chip"><strong>8.5 mm</strong> Width</div>
+                        <div class="spec-chip"><strong>44 g</strong> Weight</div>
+                        <div class="spec-chip"><strong>Ergonomic</strong> Inner Ellipse</div>
+                      </div>
+                      <!-- Finish Variant Picker -->
+                      <div class="variant-picker-group">
+                        <span class="picker-label">Steel Finish:</span>
+                        <div class="picker-swatches" id="cuff-swatches">
+                          <button type="button" class="color-swatch is-active" data-src="https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=1200&q=85" title="Brushed Steel" style="background: #cfd4dc;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=1200&q=85" title="Obsidian DLC" style="background: #25272c;"></button>
+                          <button type="button" class="color-swatch" data-src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=1200&q=85" title="Champagne Gold" style="background: #d4af6a;"></button>
+                        </div>
+                      </div>
+                      <div class="solo-actions">
+                        <button type="button" class="btn btn-primary btn-sm" id="btn-acquire-cuff">
+                          <span>Acquire Cuff ↗</span>
+                        </button>
+                        <button type="button" class="btn btn-secondary btn-sm" id="btn-inspect-cuff">
+                          <span>Specifications →</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- Bottom Bar: Status & Interactive Tour -->
+              <div class="showcase-footer">
+                <div class="footer-hint">
+                  <span class="hint-icon">✥</span>
+                  <span class="hint-text" id="showcase-hint-text">MOVE CURSOR FOR 3D PERSPECTIVE · CLICK ANY ITEM TO INSPECT</span>
+                </div>
+                <div class="footer-controls">
+                  <button type="button" class="tour-toggle-btn is-playing" id="tour-toggle-btn" title="Toggle Auto-Tour">
+                    <span class="tour-icon">⏸</span>
+                    <span class="tour-txt">Auto-Tour</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION B: BRAND MANIFESTO (DARK THEME) ================= -->
+      <section class="vision-section dark-theme" id="manifesto" aria-labelledby="manifesto-heading">
+        <div class="section-tag-row">
+          <div class="tag-label">WHAT IS OCHIR? // THE PHILOSOPHY</div>
+          <div class="tag-meta">OCHIR ATELIER · ZÜRICH · DHAKA · MILANO</div>
+        </div>
+
+        <div class="vision-container">
+          <div class="vision-statement-box">
+            <h2 id="manifesto-heading" class="visually-hidden">The Ochir Manifesto</h2>
+            <!-- Scroll-Triggered Opacity Reveal Typography -->
+            <p class="vision-large-text scroll-reveal-text" id="manifesto-scroll-text">
+              The things we keep tell us who we are. We reject seasonal obsolescence in favor of
+              honest materials, exacting hands, and the quiet confidence to leave enough alone.
+              Every timepiece, wallet, and sculpted steel cuff is built for lifetime permanence.
+            </p>
+
+            <div class="vision-sub-grid">
+              <p class="vision-desc">
+                Never more than necessary. Never less than exceptional. Sourced from small heritage
+                workshops, certified Tuscan tanneries, and precision Swiss assembly benches.
+                Every piece gains lustrous patina and tactile character over decades, not seasons.
+              </p>
+
+              <!-- Rotating Circular Interaction Stamp -->
+              <div class="orbit-badge-wrap" id="orbit-badge">
+                <a href="#collection" class="orbit-seal-link" aria-label="Explore The Collection">
+                  <svg class="orbit-seal-svg" viewBox="0 0 160 160" aria-hidden="true">
+                    <defs>
+                      <path id="orbit-text-circle" d="M 80, 80 m -62, 0 a 62,62 0 1,1 124,0 a 62,62 0 1,1 -124,0" />
+                    </defs>
+                    <text>
+                      <textPath href="#orbit-text-circle" startOffset="0%">
+                        HANDCRAFTED LUXURY • TIMELESS SILHOUETTES • OCHIR ATELIER •
+                      </textPath>
+                    </text>
+                  </svg>
+                  <div class="orbit-core">
+                    <span class="orbit-arrow">↓</span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Micro-Stats Pill Counter Strip -->
+          <div class="vision-stats-deck">
+            <div class="stat-cell">
+              <div class="stat-top">
+                <span class="stat-number">40mm</span>
+                <span class="stat-unit">CASE</span>
+              </div>
+              <div class="stat-label">Swiss Column-Wheel Mechanical Caliber</div>
+              <div class="stat-bar"><div class="stat-fill" style="width: 100%"></div></div>
+            </div>
+
+            <div class="stat-cell">
+              <div class="stat-top">
+                <span class="stat-number">100%</span>
+                <span class="stat-unit">VACHETTA</span>
+              </div>
+              <div class="stat-label">Italian Certified Vegetable Leather</div>
+              <div class="stat-bar"><div class="stat-fill" style="width: 100%"></div></div>
+            </div>
+
+            <div class="stat-cell">
+              <div class="stat-top">
+                <span class="stat-number">316L</span>
+                <span class="stat-unit">SURGICAL</span>
+              </div>
+              <div class="stat-label">Marine Grade Anti-Corrosive Steel</div>
+              <div class="stat-bar"><div class="stat-fill" style="width: 100%"></div></div>
+            </div>
+
+            <div class="stat-cell cta-cell">
+              <div class="cta-cell-content">
+                <span class="cell-kicker">LIFETIME SERVICE</span>
+                <h4>Repairable by design, supported for life.</h4>
+                <button type="button" class="btn btn-orange-outline" id="inquire-bespoke-trigger-btn">
+                  <span>Bespoke Consultation</span>
+                  <span aria-hidden="true">↗</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION B2: THE ANATOMY OF PERMANENCE (INTERACTIVE MATERIALS & PATINA) ================= -->
+      <section class="materials-section dark-theme" id="materials" aria-labelledby="materials-heading">
+        <div class="section-tag-row">
+          <div class="tag-label">THE ANATOMY OF PERMANENCE</div>
+          <div class="tag-meta">316L STEEL · TUSCAN VACHETTA · SWISS MECHANICAL</div>
+        </div>
+
+        <div class="materials-container">
+          <div class="materials-header">
+            <div class="micro-badge badge-dark">
+              <span>METALLURGY &amp; CRAFT</span>
+            </div>
+            <h2 id="materials-heading" class="materials-title">
+              Form without ornament.<br />
+              <span class="text-sub-headline-dark">Materials with memory.</span>
+            </h2>
+            <p class="materials-lead">
+              Every Ochir object is an intersection of honest organic materials and sub-micron industrial precision.
+              Nothing is plated. Nothing is disguised. Everything matures with time.
+            </p>
+          </div>
+
+          <!-- 3 Interactive Material Pillars -->
+          <div class="materials-grid">
+
+            <!-- Card 1: 316L Surgical Stainless Steel -->
+            <div class="material-card" data-tilt>
+              <div class="material-media-stage">
+                <img src="https://images.unsplash.com/photo-1535632066927-ab7c9ab60908?auto=format&fit=crop&w=900&q=85" alt="Marine Surgical 316L Stainless Steel" class="material-img" />
+                <div class="material-sheen-sweep"></div>
+                <div class="material-metric-badge">±0.005 MM TOLERANCE</div>
+              </div>
+              <div class="material-content">
+                <span class="material-kicker">METALLURGY // 01</span>
+                <h3 class="material-name">Marine Surgical 316L Steel</h3>
+                <p class="material-desc">
+                  Forged with 2.5% molybdenum to resist saltwater, acid, and sweat without tarnishing.
+                  Finished with micro-longitudinal brushing and diamond-polished chamfered edges.
+                </p>
+                <div class="material-specs-list">
+                  <div class="spec-row">
+                    <span class="spec-key">Corrosion Index</span>
+                    <span class="spec-val">PREN &gt; 25.0</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-key">Hardness</span>
+                    <span class="spec-val">220 HV Micro-Vickers</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-key">Finish</span>
+                    <span class="spec-val">Hand-Brushed Satin</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Tuscan Vachetta Leather & The Interactive Patina Time Slider -->
+            <div class="material-card patina-card" data-tilt>
+              <div class="material-media-stage patina-stage-wrap">
+                <!-- Patina Comparison Stage -->
+                <div class="patina-container" id="patina-container">
+                  <!-- Aged Image (Bottom / Revealed) -->
+                  <div class="patina-layer patina-aged">
+                    <img src="https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&w=900&q=85" alt="Tuscan Leather After 10 Years Patina" class="material-img" />
+                    <span class="patina-year-badge aged-badge">YEAR 10 · RICH COGNAC PATINA</span>
+                  </div>
+                  <!-- Fresh Image (Top / Clipped) -->
+                  <div class="patina-layer patina-fresh" id="patina-fresh-layer">
+                    <img src="https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=900&q=85" alt="Tuscan Leather Day 1" class="material-img" />
+                    <span class="patina-year-badge fresh-badge">DAY 01 · NATURAL SADDLE TAN</span>
+                  </div>
+                  <!-- Interactive Slider Divider -->
+                  <div class="patina-divider" id="patina-divider">
+                    <div class="patina-handle" aria-label="Slide to compare leather aging">
+                      <span class="handle-arrow">‹</span>
+                      <span class="handle-arrow">›</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="material-metric-badge">100% VEGETABLE TANNED</div>
+              </div>
+              <div class="material-content">
+                <span class="material-kicker">ORGANIC HIDE // 02</span>
+                <h3 class="material-name">Tuscan Vachetta &amp; Natural Patina</h3>
+                <p class="material-desc">
+                  Steeped in chestnut and mimosa bark tannins in Santa Croce sull'Arno. Unsealed by synthetic lacquer,
+                  allowing the leather to breathe, absorb sunlight, and develop a rich, luminous heirloom patina.
+                </p>
+                <div class="patina-control-hint">
+                  <span class="hint-bullet">●</span> DRAG SLIDER TO PREVIEW 10-YEAR PATINA TIMELINE
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 3: Swiss Mechanical Column-Wheel Horology -->
+            <div class="material-card" data-tilt>
+              <div class="material-media-stage">
+                <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=900&q=85" alt="Swiss Mechanical Horology Escapement" class="material-img" />
+                <div class="escapement-pulse-overlay" aria-hidden="true">
+                  <div class="gear-ring gear-1"></div>
+                  <div class="gear-ring gear-2"></div>
+                </div>
+                <div class="material-metric-badge">28,800 VPH CHRONOMETER</div>
+              </div>
+              <div class="material-content">
+                <span class="material-kicker">HOROLOGY // 03</span>
+                <h3 class="material-name">Swiss Column-Wheel Caliber</h3>
+                <p class="material-desc">
+                  Traditional column-wheel architecture ensures tactile, buttery pusher actuation without dial jump.
+                  Glucydur balance wheel, anti-magnetic hairspring, and 48-hour power reserve.
+                </p>
+                <div class="material-specs-list">
+                  <div class="spec-row">
+                    <span class="spec-key">Frequency</span>
+                    <span class="spec-val">4 Hz (28,800 BPH)</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-key">Jewels</span>
+                    <span class="spec-val">27 Synthetic Rubies</span>
+                  </div>
+                  <div class="spec-row">
+                    <span class="spec-key">Regulation</span>
+                    <span class="spec-val">5 Positions Adjusted</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION C: CURATED PRODUCT SHOWCASE & QUICK ORDER ================= -->
+      <section class="services-section" id="collection" aria-labelledby="collection-heading">
+        <div class="services-container">
+          <div class="section-header">
+            <div>
+              <div class="micro-badge">
+                <span>PERMANENT CATALOG</span>
+              </div>
+              <h2 id="collection-heading" class="section-title">
+                The Objects.<br />
+                <span class="text-sub-headline">Considered in detail.</span>
+              </h2>
+            </div>
+            <p class="section-summary">
+              Discover our permanent catalog of daily essentials. Hover over any piece to inspect
+              alternate lifestyle views, or open the quick variant drawer to acquire yours directly.
+            </p>
+          </div>
+
+          <!-- Shop Discovery Toolbar: Search, Price Filter, and Sorting -->
+          <div class="shop-discovery-toolbar" role="search" aria-label="Catalog Filters">
+            <div class="shop-search-wrap">
+              <span class="search-icon" aria-hidden="true">🔍</span>
+              <input
+                type="text"
+                id="shop-search-input"
+                class="shop-search-input"
+                placeholder="Search by piece, caliber, or material..."
+                aria-label="Search catalog products"
+              />
+            </div>
+
+            <div class="shop-filter-controls">
+              <div class="price-filter-group" aria-label="Price range filter">
+                <span>Price:</span>
+                <input type="number" id="shop-min-price" class="price-mini-input" placeholder="Min" aria-label="Minimum price" />
+                <span>–</span>
+                <input type="number" id="shop-max-price" class="price-mini-input" placeholder="Max" aria-label="Maximum price" />
+                <button type="button" id="shop-apply-price" class="btn btn-secondary btn-sm">Filter</button>
+              </div>
+
+              <select id="shop-sort-select" class="shop-select" aria-label="Sort catalog">
+                <option value="newest">Sort: Newest Arrivals</option>
+                <option value="price_asc">Price: Low to High</option>
+                <option value="price_desc">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Multi-Tab Category Filter -->
+          <div class="tab-controls-wrapper" role="tablist" aria-label="Product Categories">
+            <button class="pill-tab is-active" role="tab" data-category="all" aria-selected="true">
+              All Items
+            </button>
+            <button class="pill-tab" role="tab" data-category="timepieces" aria-selected="false">
+              Timepieces
+            </button>
+            <button class="pill-tab" role="tab" data-category="wallets" aria-selected="false">
+              Cardholders &amp; Wallets
+            </button>
+            <button class="pill-tab" role="tab" data-category="accessories" aria-selected="false">
+              Signet &amp; Cuffs
+            </button>
+          </div>
+
+          <!-- Interactive Product Grid (Rendered dynamically from OchirStore) -->
+          <div class="store-products-grid" id="store-products-grid" aria-live="polite">
+            <!-- Populated by app.js from store.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION D: THE ATELIER JOURNAL / IN CONTEXT ================= -->
+      <section class="lookbook-section" id="lookbook" aria-labelledby="lookbook-heading">
+        <div class="lookbook-container">
+          <div class="lookbook-header">
+            <div>
+              <div class="micro-badge">
+                <span>EDITORIAL JOURNAL</span>
+              </div>
+              <h2 id="lookbook-heading" class="section-title">
+                The Objects in Context.<br />
+                <span class="text-sub-headline">Lived with daily.</span>
+              </h2>
+            </div>
+            <p class="section-summary">
+              Quiet companions for the disciplined and observant. Photographed across London,
+              Zürich, and Milan in honest natural light.
+            </p>
+          </div>
+
+          <!-- Editorial Mosaic Grid -->
+          <div class="lookbook-mosaic-grid">
+
+            <!-- Mosaic Item 1: Tall Card -->
+            <div class="mosaic-card mosaic-tall" data-tilt>
+              <div class="mosaic-media">
+                <img src="https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=1200&q=85" alt="The Chronograph on Savile Row" class="mosaic-img" />
+                <div class="mosaic-overlay"></div>
+                <div class="mosaic-sheen"></div>
+              </div>
+              <div class="mosaic-caption">
+                <div class="mosaic-tags">
+                  <span class="tag-location">MAYFAIR · LONDON</span>
+                  <span class="tag-item">THE CHRONOGRAPH 40MM</span>
+                </div>
+                <h3 class="mosaic-title">Morning Light in Mayfair</h3>
+                <p class="mosaic-desc">Understated proportion under a tailored flannel cuff.</p>
+                <button type="button" class="mosaic-quick-btn lookbook-acquire-btn" data-product="och-prod-01">
+                  <span>Acquire Chronograph ↗</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mosaic Item 2: Square Top -->
+            <div class="mosaic-card mosaic-square" data-tilt>
+              <div class="mosaic-media">
+                <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?auto=format&fit=crop&w=900&q=85" alt="Atelier Leather Crafting Tools" class="mosaic-img" />
+                <div class="mosaic-overlay"></div>
+                <div class="mosaic-sheen"></div>
+              </div>
+              <div class="mosaic-caption">
+                <div class="mosaic-tags">
+                  <span class="tag-location">SANTA CROCE · TUSCANY</span>
+                  <span class="tag-item">ATELIER HIDES</span>
+                </div>
+                <h3 class="mosaic-title">The Artisan's Table</h3>
+                <p class="mosaic-desc">Natural beeswax, French linen thread, and unhurried hands.</p>
+                <button type="button" class="mosaic-quick-btn lookbook-acquire-btn" data-product="och-prod-04">
+                  <span>Inspect Bifold ↗</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mosaic Item 3: Square Bottom -->
+            <div class="mosaic-card mosaic-square" data-tilt>
+              <div class="mosaic-media">
+                <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=900&q=85" alt="Sculpted Steel Bracelet Architecture" class="mosaic-img" />
+                <div class="mosaic-overlay"></div>
+                <div class="mosaic-sheen"></div>
+              </div>
+              <div class="mosaic-caption">
+                <div class="mosaic-tags">
+                  <span class="tag-location">ZÜRICH ATELIER</span>
+                  <span class="tag-item">THE SCULPTED CUFF</span>
+                </div>
+                <h3 class="mosaic-title">Fluid Geometry</h3>
+                <p class="mosaic-desc">Continuous 316L steel reflecting alpine daylight.</p>
+                <button type="button" class="mosaic-quick-btn lookbook-acquire-btn" data-product="och-prod-05">
+                  <span>Inspect Sculpted Cuff ↗</span>
+                  <span class="btn-arrow">→</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mosaic Item 4: Wide Trio Ensemble -->
+            <div class="mosaic-card mosaic-wide" data-tilt>
+              <div class="mosaic-media">
+                <img src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=85" alt="The Ochir Daily Carry Ensemble" class="mosaic-img" />
+                <div class="mosaic-overlay"></div>
+                <div class="mosaic-sheen"></div>
+              </div>
+              <div class="mosaic-caption">
+                <div class="mosaic-tags">
+                  <span class="tag-location">BAHNHOFSTRASSE · ZÜRICH</span>
+                  <span class="tag-item">THE COMPLETE TRILOGY</span>
+                </div>
+                <h3 class="mosaic-title">The Complete Daily Carry</h3>
+                <p class="mosaic-desc">A unified language of steel, sapphire, and vegetable leather.</p>
+                <a href="#collection" class="mosaic-quick-btn">
+                  <span>Explore The Full Catalog</span>
+                  <span class="btn-arrow">→</span>
+                </a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION F: PRODUCTION PIPELINE & EDITORIAL FOOTER ================= -->
+      <section class="process-section dark-theme" id="craft" aria-labelledby="craft-heading">
+        <div class="section-tag-row">
+          <div class="tag-label">THE CRAFT PIPELINE</div>
+          <div class="tag-meta">METICULOUS HANDS · HONEST MATERIALS</div>
+        </div>
+
+        <div class="process-container">
+          <div class="process-header">
+            <h2 id="craft-heading" class="process-title">
+              Nothing is left to chance.<br />
+              <span class="text-highlight-orange">Every detail has a reason.</span>
+            </h2>
+            <p class="process-lead">
+              From raw Tuscan hides and forged 316L surgical steel billets to final hand-burnishing
+              and chronometer regulation, our production pipeline honours slow, unhurried permanence.
+            </p>
+          </div>
+
+          <div class="pipeline-grid">
+            <article class="pipeline-step-card">
+              <div class="step-num-pill">STAGE 01 // SOURCING</div>
+              <h3 class="step-title">Material with Meaning</h3>
+              <p class="step-desc">
+                Full-grain Italian vegetable-tanned hides steeped in natural chestnut and bark tannins.
+                Marine 316L stainless steel selected for what it will endure without corrosion.
+              </p>
+              <div class="step-meta">
+                <span class="meta-icon">🌿</span>
+                <span>Consorzio Vera Pelle Certified</span>
+              </div>
+            </article>
+
+            <article class="pipeline-step-card">
+              <div class="step-num-pill">STAGE 02 // PRECISION</div>
+              <h3 class="step-title">Precision Millwork</h3>
+              <p class="step-desc">
+                Every line is reduced to its singular purpose. 40mm watch case proportioned for balance.
+                Cuffs sculpted with an ergonomic inner ellipse that settles naturally on the wrist.
+              </p>
+              <div class="step-meta">
+                <span class="meta-icon">📐</span>
+                <span>Sub-Micron CNC Turning</span>
+              </div>
+            </article>
+
+            <article class="pipeline-step-card">
+              <div class="step-num-pill">STAGE 03 // HAND ASSEMBLY</div>
+              <h3 class="step-title">Hand Assembly &amp; Seam</h3>
+              <p class="step-desc">
+                Traditional saddle-stitching using linen thread coated in natural beeswax. Swiss movements
+                regulated across 5 positions for chronometer-grade daily accuracy.
+              </p>
+              <div class="step-meta">
+                <span class="meta-icon">🪡</span>
+                <span>Hand-Burnished Edges</span>
+              </div>
+            </article>
+
+            <article class="pipeline-step-card">
+              <div class="step-num-pill">STAGE 04 // BESPOKE PACKAGING</div>
+              <h3 class="step-title">Care for a Lifetime</h3>
+              <p class="step-desc">
+                Modular and repairable by design. Delivered in our archival wooden heirloom box with
+                a serialized certificate of authenticity and lifelong atelier service guarantee.
+              </p>
+              <div class="step-meta">
+                <span class="meta-icon">🛡️</span>
+                <span>Lifetime Atelier Service</span>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Mega Typographic CTA -->
+      <section class="mega-cta-section dark-theme" id="contact" aria-labelledby="cta-heading">
+        <div class="cta-grid-glow" aria-hidden="true"></div>
+
+        <div class="mega-cta-container">
+          <div class="cta-eyebrow">
+            <span class="eyebrow-line"></span>
+            <span>OBJECTS TO KEEP, NOT REPLACE</span>
+            <span class="eyebrow-line"></span>
+          </div>
+
+          <h2 id="cta-heading" class="mega-headline">
+            OBJECTS OF<br />
+            <span class="mega-highlight">PERMANENCE.</span><br />
+            MADE TO STAY.
+          </h2>
+
+          <p class="mega-lead">
+            Fine timepieces, handcrafted leather carry goods, and sculptural steel cuffs.
+            Carefully packaged in our signature archival wooden box with serialized certificates.
+          </p>
+
+          <div class="magnetic-btn-wrap" id="magnetic-zone">
+            <button type="button" class="magnetic-circle-btn" id="magnetic-inquire-btn" aria-label="Acquire an Ochir Object">
+              <span class="magnetic-text">Acquire<br />a Piece</span>
+              <span class="magnetic-arrow">↗</span>
+              <div class="magnetic-ring" aria-hidden="true"></div>
+            </button>
+          </div>
+
+          <div class="cta-direct-contact">
+            <span>Direct Client Concierge:</span>
+            <a href="mailto:atelier@ochir.studio" class="direct-email-link">atelier@ochir.studio ↗</a>
+            <span class="divider">/</span>
+            <span>Complimentary Worldwide Courier &amp; 30-Day Returns</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Comprehensive Modern Dark Footer -->
+    <footer class="site-footer dark-theme">
+      <div class="footer-container">
+        <div class="footer-grid">
+          <div class="footer-brand-col">
+            <a class="brand-mark footer-brand-mark" href="#top">
+              <span class="brand-title">OCHIR<span class="brand-sub">® ATELIER</span></span>
+            </a>
+
+            <p class="footer-brand-desc">
+              For the objects we live with. For the things that last.
+              Fine mechanical watches, Italian vegetable-tanned wallets, and brushed marine steel cuffs.
+            </p>
+
+            <div class="footer-coords">
+              <div class="coord-item">
+                <span class="coord-label">DHAKA ATELIER //</span>
+                <span class="coord-val">23.8103° N, 90.4125° E</span>
+              </div>
+              <div class="coord-item">
+                <span class="coord-label">ZÜRICH ATELIER //</span>
+                <span class="coord-val">47.3769° N, 8.5417° E</span>
+              </div>
+              <div class="coord-item">
+                <span class="coord-label">MILANO LEATHER HUB //</span>
+                <span class="coord-val">45.4642° N, 9.1900° E</span>
+              </div>
+            </div>
+
+            <div class="system-health-pill">
+              <span class="pulse-green"></span>
+              <span>ATELIER DISPATCH ACTIVE // COMPLIMENTARY COURIER</span>
+            </div>
+          </div>
+
+          <div class="footer-nav-col">
+            <span class="col-title">THE OBJECTS</span>
+            <ul class="footer-links">
+              <li><a href="#collection" data-filter="timepieces">The Ochir Chronograph 40mm</a></li>
+              <li><a href="#collection" data-filter="timepieces">The Atelier Mechanical 39mm</a></li>
+              <li><a href="#collection" data-filter="wallets">The Daily Card Case</a></li>
+              <li><a href="#collection" data-filter="wallets">The Atelier Bifold Wallet</a></li>
+              <li><a href="#collection" data-filter="accessories">The Sculpted Steel Cuff</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <span class="col-title">OPERATIONS</span>
+            <ul class="footer-links">
+              <li><a href="#" id="footer-admin-link">Admin Control Room ↗</a></li>
+              <li><a href="#" id="footer-track-order-link">Order Status &amp; Tracking</a></li>
+              <li><a href="#craft">Our Materials &amp; Tannery</a></li>
+              <li><a href="#manifesto">A Note on Permanence</a></li>
+              <li><a href="mailto:concierge@ochir.studio">Bespoke Monogramming</a></li>
+            </ul>
+          </div>
+
+          <div class="footer-nav-col">
+            <span class="col-title">PRIVATE CLIENT</span>
+            <ul class="footer-links">
+              <li><a href="mailto:concierge@ochir.studio">Client Concierge ↗</a></li>
+              <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer">Instagram ↗</a></li>
+              <li><a href="https://pinterest.com" target="_blank" rel="noopener noreferrer">Pinterest ↗</a></li>
+              <li><a href="https://are.na" target="_blank" rel="noopener noreferrer">Are.na Channel ↗</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="footer-bottom-bar">
+          <div class="copy-notice">
+            © 2026 OCHIR STUDIO &amp; ATELIER. ALL RIGHTS RESERVED.
+          </div>
+          <div class="footer-legal-links">
+            <a href="#top">PRIVACY POLICY</a>
+            <span class="dot">·</span>
+            <a href="#top">TERMS OF SALE</a>
+            <span class="dot">·</span>
+            <a href="#top">COMPLIMENTARY RETURNS</a>
+            <span class="dot">·</span>
+            <a href="#" id="footer-admin-bottom-link">ADMIN CONTROL ROOM</a>
+          </div>
+        </div>
+      </div>
+    </footer>
+  
+    <!-- ================= SLIDE-OVER SHOPPING BAG & CHECKOUT DRAWER ================= -->
+    <aside class="mobile-drawer cart-drawer" id="cart-drawer" aria-hidden="true" aria-label="Shopping Bag">
+      <div class="drawer-header">
+        <span class="drawer-logo">YOUR SHOPPING BAG (<span id="drawer-cart-count">0</span>)</span>
+        <button type="button" class="drawer-close-btn" id="cart-drawer-close" aria-label="Close Bag">✕</button>
+      </div>
+
+      <div class="cart-items-body" id="cart-items-body">
+        <div class="cart-empty-view" id="cart-empty-view">
+          <div class="cart-empty-mark">O.</div>
+          <h4>Your bag is taking a moment to itself.</h4>
+          <p>There are no objects in your bag just yet.</p>
+          <a href="#collection" class="btn btn-primary" id="cart-start-shopping-btn">
+            <span>Discover Objects ↗</span>
+          </a>
+        </div>
+        <div class="cart-items-list" id="cart-items-list" hidden></div>
+      </div>
+
+      <div class="cart-drawer-footer" id="cart-drawer-footer" hidden>
+        <!-- Promo code input -->
+        <div class="promo-code-row">
+          <input type="text" id="promo-input" class="text-input promo-input" placeholder="Promo code (e.g. OCHIR10)" />
+          <button type="button" class="btn btn-secondary btn-sm" id="apply-promo-btn">Apply</button>
+        </div>
+        <div class="promo-discount-badge" id="promo-discount-badge" hidden>
+          <span>Promo Code Applied: 10% Quiet Luxury Privilege</span>
+        </div>
+
+        <div class="cart-subtotal-row">
+          <span>Subtotal</span>
+          <span class="cart-subtotal-val" id="cart-subtotal-val">৳0 BDT</span>
+        </div>
+        <div class="cart-shipping-notice">
+          <span>Complimentary Express Courier &amp; Insurance Included</span>
+        </div>
+        <button type="button" class="btn btn-primary w-full" id="drawer-init-checkout-btn">
+          <span>Proceed to Checkout ↗</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ================= SECTION D: INTERACTIVE PRODUCT DETAIL MODAL ================= -->
+    <div class="quote-modal-overlay" id="product-detail-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card product-detail-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker" id="pdm-kicker">CURATED OBJECT</span>
+            <h3 id="pdm-title">The Ochir Chronograph 40mm</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="pdm-close-btn" aria-label="Close dialog">✕</button>
+        </div>
+
+        <div class="pdm-content-grid">
+          <div class="pdm-gallery-column">
+            <div class="pdm-main-image-wrap">
+              <img id="pdm-main-img" src="" alt="Product Detail" />
+            </div>
+            <div class="pdm-thumbs-row">
+              <img id="pdm-thumb-1" src="" alt="Thumbnail 1" class="pdm-thumb is-active" />
+              <img id="pdm-thumb-2" src="" alt="Thumbnail 2" class="pdm-thumb" />
+            </div>
+          </div>
+
+          <div class="pdm-info-column">
+            <span class="pdm-price" id="pdm-price">$1,480 USD</span>
+            <span class="pdm-stock-status" id="pdm-stock-badge">In Stock · Ready for Dispatch</span>
+            <p class="pdm-description" id="pdm-desc"></p>
+
+            <!-- Specifications Table -->
+            <div class="pdm-specs-box">
+              <h4>Craftsmanship &amp; Architectural Specs</h4>
+              <div class="pdm-specs-list" id="pdm-specs-list"></div>
+            </div>
+
+            <!-- Variant Selectors -->
+            <div class="pdm-variants-section" id="pdm-variants-section">
+              <div class="field-group" id="pdm-variant-group-1">
+                <label id="pdm-var-label-1">Dial Finish</label>
+                <select id="pdm-var-select-1" class="select-input"></select>
+              </div>
+              <div class="field-group" id="pdm-variant-group-2">
+                <label id="pdm-var-label-2">Strap Selection</label>
+                <select id="pdm-var-select-2" class="select-input"></select>
+              </div>
+            </div>
+
+            <!-- Monogram Option -->
+            <div class="field-group">
+              <label for="pdm-engrave-input">Complimentary Monogram Engraving (Optional)</label>
+              <input type="text" id="pdm-engrave-input" class="text-input" placeholder="e.g. O.V. 2026" maxlength="10" />
+            </div>
+
+            <div class="pdm-action-row">
+              <button type="button" class="btn btn-primary" id="pdm-add-bag-btn" style="flex:1;">
+                <span>Acquire Piece ↗</span>
+              </button>
+              <button type="button" class="btn btn-secondary btn-icon" id="pdm-wishlist-btn" title="Save to Wishlist" style="padding:10px 14px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;gap:6px;">
+                <span class="pdm-wishlist-icon" id="pdm-wishlist-icon">🤍</span>
+                <span class="pdm-wishlist-text" id="pdm-wishlist-text" style="font-size:0.8rem;">Wishlist</span>
+              </button>
+              <a href="https://wa.me/8801335852121" target="_blank" rel="noopener" class="btn btn-secondary" id="pdm-wa-inquire-btn" title="Inquire on WhatsApp" style="padding:10px 14px;border-radius:var(--radius-sm);display:inline-flex;align-items:center;justify-content:center;gap:6px;text-decoration:none;">
+                <span>💬 WhatsApp</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= SECTION E: FRICTIONLESS MULTI-STEP CHECKOUT MODAL ================= -->
+    <div class="quote-modal-overlay" id="checkout-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card checkout-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">SECURE DISPATCH PROTOCOL</span>
+            <h3>Acquisition Checkout</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="checkout-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <!-- Checkout Multi-Step Indicator -->
+        <div class="checkout-stepper">
+          <div class="step-node is-active" data-step="1">
+            <span class="step-num">1</span>
+            <span class="step-text">Shipping Details</span>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-node" data-step="2">
+            <span class="step-num">2</span>
+            <span class="step-text">Payment Gateway</span>
+          </div>
+          <div class="step-divider"></div>
+          <div class="step-node" data-step="3">
+            <span class="step-num">3</span>
+            <span class="step-text">Review &amp; Confirm</span>
+          </div>
+        </div>
+
+        <form id="checkout-form">
+          <!-- Step 1: Shipping Details -->
+          <div class="checkout-step-panel" id="checkout-step-1">
+            <div class="form-fields">
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="chk-name">Recipient Full Name *</label>
+                  <input type="text" id="chk-name" class="text-input" placeholder="e.g. Alistair Vance / Tariqul Islam" required />
+                </div>
+                <div class="field-group">
+                  <label for="chk-phone">Mobile Phone (Courier Contact) *</label>
+                  <input type="tel" id="chk-phone" class="text-input" placeholder="017XXXXXXXX or +880 1..." required />
+                </div>
+              </div>
+
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="chk-district">Delivery Zone / District *</label>
+                  <select id="chk-district" class="select-input" required>
+                    <option value="Dhaka City">Inside Dhaka (৳80 delivery charge)</option>
+                    <option value="Outside Dhaka">Outside Dhaka (৳150 delivery charge)</option>
+                    <option value="Chittagong">Chittagong (৳150 delivery charge)</option>
+                    <option value="Sylhet">Sylhet (৳150 delivery charge)</option>
+                    <option value="Rajshahi">Rajshahi (৳150 delivery charge)</option>
+                    <option value="Khulna">Khulna (৳150 delivery charge)</option>
+                    <option value="Barisal">Barisal (৳150 delivery charge)</option>
+                    <option value="Rangpur">Rangpur (৳150 delivery charge)</option>
+                    <option value="Mymensingh">Mymensingh (৳150 delivery charge)</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="chk-area">Area / Thana / Postcode *</label>
+                  <input type="text" id="chk-area" class="text-input" placeholder="e.g. Banani, Gulshan, Dhanmondi, Agrabad" required />
+                </div>
+              </div>
+
+              <div class="field-group">
+                <label for="chk-address">Complete Street Address (House, Road, Apartment) *</label>
+                <input type="text" id="chk-address" class="text-input" placeholder="House #, Road #, Sector/Block" required />
+              </div>
+
+              <div class="field-group">
+                <label for="chk-instructions">Delivery Instructions (Optional)</label>
+                <input type="text" id="chk-instructions" class="text-input" placeholder="e.g. Leave with concierge or call before delivery arrival" />
+              </div>
+
+              <div class="checkout-step-nav">
+                <div></div>
+                <button type="button" class="btn btn-primary" id="btn-to-step-2">Continue to Manual Payment →</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2: Payment Method (Strictly NO Online Gateways — Manual bKash, Rocket, COD) -->
+          <div class="checkout-step-panel" id="checkout-step-2" hidden>
+            <div class="payment-methods-grid">
+              <!-- Option 1: bKash Manual -->
+              <label class="pay-option is-selected" data-method="bKash">
+                <input type="radio" name="payMethod" value="bKash" checked />
+                <div class="pay-option-content">
+                  <strong>bKash (Send Money / Payment)</strong>
+                  <span>Direct manual transfer to official Ochir bKash number</span>
+                </div>
+              </label>
+
+              <!-- Option 2: Rocket Manual -->
+              <label class="pay-option" data-method="Rocket">
+                <input type="radio" name="payMethod" value="Rocket" />
+                <div class="pay-option-content">
+                  <strong>Rocket (DBBL MFS)</strong>
+                  <span>Manual transfer to official Ochir Rocket account</span>
+                </div>
+              </label>
+
+              <!-- Option 3: Cash on Delivery -->
+              <label class="pay-option" data-method="COD">
+                <input type="radio" name="payMethod" value="COD" />
+                <div class="pay-option-content">
+                  <strong>Cash on Delivery (White Glove)</strong>
+                  <span>Handover verification & cash payment upon personal courier arrival</span>
+                </div>
+              </label>
+            </div>
+
+            <!-- bKash Input Container -->
+            <div class="manual-payment-box" id="pay-box-bkash">
+              <p><strong>bKash Manual Payment Protocol:</strong></p>
+              <p>1. Open your bKash App or dial *247#.<br />
+                 2. Choose <em>Send Money</em> or <em>Make Payment</em> to our official atelier number:</p>
+              <div class="manual-account-highlight">
+                <span class="manual-account-number" id="disp-bkash-num">01335852121</span>
+                <button type="button" class="btn-copy-num" data-copy="01335852121">Copy Number</button>
+              </div>
+              <p>3. Enter your bKash Sender Mobile Number and Transaction ID (TrxID) below for verification:</p>
+              <div class="field-row" style="margin-top:10px;">
+                <div class="field-group">
+                  <label for="chk-bkash-sender">Your bKash Sender Mobile *</label>
+                  <input type="text" id="chk-bkash-sender" class="text-input" placeholder="017XXXXXXXX" />
+                </div>
+                <div class="field-group">
+                  <label for="chk-bkash-trx">bKash Transaction ID (TrxID) *</label>
+                  <input type="text" id="chk-bkash-trx" class="text-input" placeholder="e.g. 9J82KLA10P" style="text-transform:uppercase;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Rocket Input Container -->
+            <div class="manual-payment-box" id="pay-box-rocket" hidden>
+              <p><strong>Rocket Manual Payment Protocol:</strong></p>
+              <p>1. Open your Rocket App or dial *322#.<br />
+                 2. Choose <em>Send Money</em> to our official Rocket account:</p>
+              <div class="manual-account-highlight">
+                <span class="manual-account-number" id="disp-rocket-num">01335852121-8</span>
+                <button type="button" class="btn-copy-num" data-copy="013358521218">Copy Number</button>
+              </div>
+              <p>3. Enter your 12-digit Rocket Sender Account and Transaction ID (TrxID) below:</p>
+              <div class="field-row" style="margin-top:10px;">
+                <div class="field-group">
+                  <label for="chk-rocket-sender">Your 12-Digit Rocket Phone *</label>
+                  <input type="text" id="chk-rocket-sender" class="text-input" placeholder="017XXXXXXXXX" />
+                </div>
+                <div class="field-group">
+                  <label for="chk-rocket-trx">Rocket Transaction ID (TrxID) *</label>
+                  <input type="text" id="chk-rocket-trx" class="text-input" placeholder="e.g. RCK8271049" style="text-transform:uppercase;" />
+                </div>
+              </div>
+            </div>
+
+            <!-- COD Container -->
+            <div class="manual-payment-box" id="pay-box-cod" hidden>
+              <p><strong>Cash on Delivery (White Glove Handover):</strong></p>
+              <p>Insured delivery available across all 64 districts in Bangladesh. You may inspect the tamper-evident luxury packaging before making the cash payment to the courier.</p>
+              <p style="margin-top:8px;color:#e65100;font-weight:500;">Please ensure the exact cash amount is ready upon courier arrival.</p>
+            </div>
+
+            <div class="checkout-step-nav">
+              <button type="button" class="btn btn-secondary" id="btn-back-to-step-1">← Back to Shipping</button>
+              <button type="button" class="btn btn-primary" id="btn-to-step-3">Review Order →</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Review & Confirm -->
+          <div class="checkout-step-panel" id="checkout-step-3" hidden>
+            <div class="order-review-summary-card" id="checkout-review-summary"></div>
+
+            <div class="checkout-step-nav">
+              <button type="button" class="btn btn-secondary" id="btn-back-to-step-2">← Back to Payment</button>
+              <button type="submit" class="btn btn-primary" id="btn-place-order-final">
+                <span>Complete Acquisition &amp; Place Order ↗</span>
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= POST-PURCHASE CONFIRMATION MODAL ================= -->
+    <div class="quote-modal-overlay" id="order-success-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card success-modal-card">
+        <div class="success-icon-wrap">✓</div>
+        <span class="modal-kicker">ACQUISITION CONFIRMED</span>
+        <h3>Order Successfully Placed</h3>
+        <p class="success-lead">
+          Thank you for choosing Ochir. Your piece is entering our atelier for preparation,
+          chronometer check, and packaging in our signature wooden heirloom box.
+        </p>
+
+        <div class="order-receipt-box" id="success-receipt-box"></div>
+
+        <div class="success-actions-row">
+          <button type="button" class="btn btn-secondary" id="btn-print-customer-receipt">Print Receipt</button>
+          <button type="button" class="btn btn-secondary" id="btn-success-admin-open">View in Admin Control Room ↗</button>
+          <button type="button" class="btn btn-primary" id="btn-success-close">Return to Storefront</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= ORDER TRACKING MODAL ================= -->
+    <div class="quote-modal-overlay" id="tracking-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card tracking-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">LOGISTICS CONCIERGE</span>
+            <h3>Track Your Acquisition</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="tracking-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <div class="tracking-search-bar">
+          <input type="text" id="track-input" class="text-input" placeholder="Enter Order ID (e.g. OCH-8491-A2) or Email" />
+          <button type="button" class="btn btn-primary" id="track-search-btn">Track Order</button>
+        </div>
+
+        <div class="tracking-results-stage" id="tracking-results-stage">
+          <p class="tracking-placeholder">Enter your order identifier above to inspect real-time courier progress and atelier status.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= CUSTOMER AUTHENTICATION MODAL ================= -->
+    <div class="quote-modal-overlay" id="auth-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width: 440px;">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">CLIENT IDENTITY &amp; PRIVILEGE</span>
+            <h3 id="auth-modal-title">Sign In to Ochir</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="auth-modal-close" aria-label="Close authentication dialog">✕</button>
+        </div>
+
+        <div class="auth-tabs">
+          <button type="button" class="auth-tab-btn is-active" id="tab-auth-signin" data-tab="signin">Sign In</button>
+          <button type="button" class="auth-tab-btn" id="tab-auth-register" data-tab="register">Create Account</button>
+          <button type="button" class="auth-tab-btn" id="tab-auth-forgot" data-tab="forgot" style="display:none;">Reset</button>
+        </div>
+
+        <!-- Panel 1: Sign In -->
+        <form id="auth-signin-form" class="auth-form-panel">
+          <div class="form-fields">
+            <div class="field-group">
+              <label for="signin-email">Email Address</label>
+              <input type="email" id="signin-email" class="text-input" placeholder="e.g. client@ochir.com" required />
+            </div>
+            <div class="field-group">
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <label for="signin-password">Password</label>
+                <button type="button" id="btn-show-forgot" style="background:none;border:none;color:#86868b;font-size:0.75rem;cursor:pointer;text-decoration:underline;">Forgot Password?</button>
+              </div>
+              <input type="password" id="signin-password" class="text-input" placeholder="••••••••" required />
+            </div>
+            <div id="signin-error" class="form-error-msg" style="color:#e02424;font-size:0.8rem;display:none;margin-bottom:10px;"></div>
+            <button type="submit" class="btn btn-primary w-full" id="btn-submit-signin">
+              <span>Sign In to Account →</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Panel 2: Register -->
+        <form id="auth-register-form" class="auth-form-panel" hidden>
+          <div class="form-fields">
+            <div class="field-group">
+              <label for="reg-name">Full Name *</label>
+              <input type="text" id="reg-name" class="text-input" placeholder="e.g. Alistair Vance" required />
+            </div>
+            <div class="field-group">
+              <label for="reg-email">Email Address *</label>
+              <input type="email" id="reg-email" class="text-input" placeholder="client@ochir.com" required />
+            </div>
+            <div class="field-group">
+              <label for="reg-phone">Mobile Phone *</label>
+              <input type="tel" id="reg-phone" class="text-input" placeholder="017XXXXXXXX or +880 1..." required />
+            </div>
+            <div class="field-group">
+              <label for="reg-password">Password (Minimum 6 characters) *</label>
+              <input type="password" id="reg-password" class="text-input" placeholder="••••••••" minlength="6" required />
+            </div>
+            <div id="register-error" class="form-error-msg" style="color:#e02424;font-size:0.8rem;display:none;margin-bottom:10px;"></div>
+            <button type="submit" class="btn btn-primary w-full" id="btn-submit-register">
+              <span>Register &amp; Preserve Bag →</span>
+            </button>
+          </div>
+        </form>
+
+        <!-- Panel 3: Forgot Password -->
+        <form id="auth-forgot-form" class="auth-form-panel" hidden>
+          <div class="form-fields">
+            <p style="font-size:0.85rem;color:#6e6e73;margin-bottom:14px;">
+              Enter your registered email address to receive a secure password reset code.
+            </p>
+            <div class="field-group">
+              <label for="forgot-email">Account Email</label>
+              <input type="email" id="forgot-email" class="text-input" placeholder="client@ochir.com" required />
+            </div>
+            <div id="forgot-step-code" hidden>
+              <div class="field-group">
+                <label for="reset-code">Verification Reset Code</label>
+                <input type="text" id="reset-code" class="text-input" placeholder="6-digit code" />
+              </div>
+              <div class="field-group">
+                <label for="reset-new-pass">New Password</label>
+                <input type="password" id="reset-new-pass" class="text-input" placeholder="New master password" minlength="6" />
+              </div>
+            </div>
+            <div id="forgot-msg" class="form-info-msg" style="font-size:0.8rem;margin-bottom:10px;"></div>
+            <button type="submit" class="btn btn-primary w-full" id="btn-submit-forgot">
+              <span>Send Verification Code →</span>
+            </button>
+            <button type="button" class="btn btn-secondary w-full" id="btn-back-to-login" style="margin-top:8px;">
+              <span>← Back to Sign In</span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- ================= CUSTOMER PROFILE & ORDER HISTORY DOSSIER ================= -->
+    <div class="quote-modal-overlay" id="customer-dossier-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card" style="max-width: 680px;">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">PRIVATE CLIENT DOSSIER</span>
+            <h3 id="dossier-customer-name">Client Account</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="customer-dossier-close" aria-label="Close dossier">✕</button>
+        </div>
+
+        <!-- Atelier Role Mode & Clearance Switcher (Visible to Admins) -->
+        <div class="dossier-role-control-card" id="dossier-role-control-card" hidden>
+          <div class="role-control-header">
+            <div class="role-badge-row">
+              <span class="micro-badge"><span class="badge-dot"></span> ATELIER PRIVILEGE &amp; ROLE CLEARANCE</span>
+              <span class="user-clearance-pill" id="dossier-clearance-badge">CLIENT (USER)</span>
+            </div>
+            <p class="role-control-desc">Select your active session mode. Your administrative privileges are verified directly via Google Cloud Firestore.</p>
+
+            <div class="firestore-account-dossier-box" id="firestore-account-dossier-box" style="margin-top:10px;padding:14px;border-radius:10px;background:#141519;border:1px solid rgba(255,255,255,0.08);">
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                <span style="font-family:var(--font-mono);font-size:0.7rem;color:#86868b;letter-spacing:0.05em;">FIRESTORE CLOUD PROFILE</span>
+                <span id="dossier-firestore-role-pill" style="font-family:var(--font-mono);font-size:0.7rem;padding:2px 8px;border-radius:4px;background:rgba(255,255,255,0.08);color:#86868b;border:1px solid rgba(255,255,255,0.12);">ROLE: USER</span>
+              </div>
+
+              <div style="font-size:0.76rem;color:#86868b;line-height:1.45;">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px;">
+                  <span>Cloud Document: <code id="dossier-firestore-doc-id" style="color:#c5a880;background:rgba(197,168,128,0.1);padding:2px 6px;border-radius:4px;">users/...</code></span>
+                  <span id="dossier-firestore-sync-state" style="font-family:var(--font-mono);font-size:0.68rem;color:#f59e0b;">⏳ Checking Cloud...</span>
+                </div>
+
+                <!-- 1-Click Sync Button -->
+                <button type="button" class="btn btn-secondary w-full" id="btn-sync-user-firestore" style="margin:8px 0;padding:8px 12px;font-size:0.78rem;border-color:rgba(255,91,0,0.35);color:#ff7a29;display:flex;align-items:center;justify-content:center;gap:6px;">
+                  <span>🔥 Push Profile to Firestore Now</span>
+                </button>
+
+                <!-- Permission Denied Warning Banner -->
+                <div id="firestore-permission-alert" style="display:none;margin-top:10px;padding:12px;border-radius:8px;background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.3);font-size:0.73rem;color:#fca5a5;line-height:1.45;">
+                  <div style="font-weight:600;color:#f87171;margin-bottom:4px;display:flex;align-items:center;gap:6px;">
+                    <span>⚠️ Firebase Security Rules Blocked Write (403 Permission Denied)</span>
+                  </div>
+                  <p style="margin-bottom:6px;color:#cbd5e1;">Your Firebase project exists, but its Security Rules are currently rejecting browser writes. To fix this in 30 seconds:</p>
+                  <ol style="margin-left:18px;margin-bottom:8px;color:#cbd5e1;padding-left:0;">
+                    <li>Open <a href="https://console.firebase.google.com/project/ochir-b84d3/firestore/rules" target="_blank" rel="noopener" style="color:#ff7a29;text-decoration:underline;font-weight:600;">Firebase Console ➔ Rules Tab ↗</a></li>
+                    <li>Paste the open rules below into the editor:</li>
+                  </ol>
+                  <pre style="background:#090a0f;padding:8px;border-radius:6px;color:#38bdf8;font-family:var(--font-mono);font-size:0.68rem;overflow-x:auto;margin:6px 0;user-select:all;border:1px solid rgba(255,255,255,0.08);">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}</pre>
+                  <p style="margin-top:6px;color:#cbd5e1;">3. Click <strong>Publish</strong> in Firebase Console, then click <strong>"Push Profile to Firestore Now"</strong> above.</p>
+                </div>
+
+                <!-- Sync Success Banner -->
+                <div id="firestore-sync-success-alert" style="display:none;margin-top:10px;padding:10px 12px;border-radius:8px;background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.3);font-size:0.73rem;color:#6ee7b7;line-height:1.45;">
+                  <strong>✓ Successfully synced with Cloud Firestore!</strong><br>
+                  Your account is live in collection <code>users</code>. In <a href="https://console.firebase.google.com/project/ochir-b84d3/firestore" target="_blank" rel="noopener" style="color:#34d399;text-decoration:underline;">Firebase Console</a>, open your email document and change <code>role: "user"</code> to <code>role: "admin"</code> to activate the Admin Control Room.
+                </div>
+
+                <p id="firestore-role-instruction" style="margin-top:8px;font-size:0.72rem;color:#a0a4b0;"></p>
+              </div>
+            </div>
+          </div>
+          <div class="role-toggle-group">
+            <button type="button" class="role-toggle-btn is-active" id="btn-role-mode-user" data-role="customer">
+              <span class="role-icon">👤</span>
+              <div class="role-meta">
+                <strong>User (Client Mode)</strong>
+                <span>Personal shopping, saved bag &amp; order history</span>
+              </div>
+            </button>
+            <button type="button" class="role-toggle-btn" id="btn-role-mode-admin" data-role="admin">
+              <span class="role-icon">⚡</span>
+              <div class="role-meta">
+                <strong>Admin (Control Room)</strong>
+                <span>Inventory, orders, chat &amp; store telemetry</span>
+              </div>
+            </button>
+          </div>
+          <div class="role-admin-action-box" id="role-admin-action-box" hidden>
+            <button type="button" class="btn btn-primary w-full" id="btn-dossier-launch-control-room">
+              <span>⚡ Enter Admin Control Room Window ↗</span>
+            </button>
+            <p class="admin-access-note">Master operational clearance confirmed. Launch the clear control room to manage the Atelier.</p>
+          </div>
+        </div>
+
+        <div class="dossier-nav-tabs">
+          <button type="button" class="dossier-tab-btn is-active" data-dossier-tab="orders">My Orders (<span id="dossier-order-count">0</span>)</button>
+          <button type="button" class="dossier-tab-btn" data-dossier-tab="addresses">Saved Addresses</button>
+          <button type="button" class="dossier-tab-btn" data-dossier-tab="wishlist">Wishlist (<span id="dossier-wishlist-count">0</span>)</button>
+          <button type="button" class="dossier-tab-btn" data-dossier-tab="profile">Profile Settings</button>
+        </div>
+
+        <div class="dossier-body">
+          <!-- Tab 1: Orders -->
+          <div id="dossier-panel-orders" class="dossier-panel">
+            <div id="dossier-orders-list">
+              <p style="color:#86868b;font-size:0.9rem;text-align:center;padding:32px;">No acquisition history found in this dossier.</p>
+            </div>
+          </div>
+
+          <!-- Tab 2: Addresses -->
+          <div id="dossier-panel-addresses" class="dossier-panel" hidden>
+            <div id="dossier-addresses-list">
+              <p style="color:#86868b;font-size:0.9rem;text-align:center;padding:24px;">No saved delivery addresses yet.</p>
+            </div>
+          </div>
+
+          <!-- Tab 3: Wishlist -->
+          <div id="dossier-panel-wishlist" class="dossier-panel" hidden>
+            <div id="dossier-wishlist-items" class="wishlist-grid" style="display:grid;grid-template-columns:repeat(auto-fill, minmax(200px, 1fr));gap:14px;">
+              <p style="color:#86868b;font-size:0.9rem;text-align:center;padding:24px;grid-column:1/-1;">Your personal curation wishlist is currently empty.</p>
+            </div>
+          </div>
+
+          <!-- Tab 4: Profile Settings -->
+          <div id="dossier-panel-profile" class="dossier-panel" hidden>
+            <form id="dossier-profile-form">
+              <div class="field-group">
+                <label for="dossier-name">Full Name</label>
+                <input type="text" id="dossier-name" class="text-input" />
+              </div>
+              <div class="field-group">
+                <label for="dossier-phone">Contact Phone</label>
+                <input type="tel" id="dossier-phone" class="text-input" />
+              </div>
+              <div class="field-group">
+                <label>Registered Email</label>
+                <input type="email" id="dossier-email" class="text-input" disabled style="opacity:0.6;cursor:not-allowed;" />
+              </div>
+              <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px;">
+                <button type="submit" class="btn btn-primary">Save Profile Changes</button>
+                <button type="button" class="btn btn-secondary" id="btn-dossier-logout" style="color:#e02424;border-color:rgba(224,36,36,0.3);">Sign Out</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= FLOATING CONCIERGE & LIVE CHAT WIDGET ================= -->
+    <button type="button" class="floating-chat-trigger" id="floating-chat-trigger" aria-label="Open Atelier Concierge Chat">
+      <span class="chat-pulse-dot" id="chat-unread-dot" hidden></span>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </button>
+
+    <div class="chat-widget-window is-hidden" id="chat-widget-window" hidden style="display: none;">
+      <div class="chat-widget-header">
+        <div class="chat-header-info">
+          <h4><span class="live-indicator"></span> OCHIR Concierge</h4>
+          <span>Direct Atelier Assistance</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;">
+          <a
+            href="https://wa.me/8801335852121?text=Hello%20OCHIR,%20I%20need%20help%20with%20a%20product%20or%20order."
+            target="_blank"
+            rel="noopener"
+            class="header-whatsapp-pill"
+            style="background:#25d366;color:#ffffff;border:none;padding:4px 8px;font-size:0.72rem;"
+            title="Chat directly on WhatsApp"
+          >
+            WhatsApp
+          </a>
+          <button type="button" id="chat-widget-close" style="background:none;border:none;color:#ffffff;font-size:1.1rem;cursor:pointer;">✕</button>
+        </div>
+      </div>
+
+      <div class="chat-widget-body" id="chat-widget-body">
+        <div class="chat-bubble admin">
+          Greetings from Ochir Atelier. How may we assist your curation or order inquiry today?
+          <span class="chat-bubble-time">Live Atelier</span>
+        </div>
+
+        <div class="chat-quick-actions" id="chat-quick-actions">
+          <button type="button" class="chat-chip" data-query="Can you help me verify my bKash or Rocket payment for an order?">
+            💳 Payment verification assistance
+          </button>
+          <button type="button" class="chat-chip" data-query="I would like consultation on watch caliber sizing and leather patina.">
+            ⌚ Watch &amp; leather craftsmanship consultation
+          </button>
+          <button type="button" class="chat-chip" data-query="How can I track my active courier dispatch status?">
+            📦 Track an active delivery
+          </button>
+        </div>
+
+        <div id="chat-messages-stream" style="display:flex;flex-direction:column;gap:10px;"></div>
+      </div>
+
+      <div class="chat-widget-footer">
+        <form id="chat-send-form" class="chat-input-row">
+          <input
+            type="text"
+            id="chat-user-input"
+            class="chat-input-field"
+            placeholder="Type your inquiry to concierge..."
+            required
+          />
+          <button type="submit" class="chat-send-btn" aria-label="Send message">↗</button>
+        </form>
+        <div class="chat-whatsapp-banner">
+          Immediate phone concierge: <a href="https://wa.me/8801335852121" target="_blank" rel="noopener">WhatsApp 01335852121</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================================
+         INTEGRATED ADMIN CONTROL ROOM WINDOW (CLEAR OPERATIONAL COMMAND CENTER)
+         ========================================================================= -->
+    <div class="admin-control-room-overlay" id="admin-control-room-modal" hidden aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="admin-control-room-window dark-theme admin-body">
+        <!-- Admin Topbar -->
+        <header class="admin-topbar">
+          <div class="admin-topbar-left">
+            <div class="brand-mark">
+              <div class="brand-symbol" aria-hidden="true">
+                <svg viewBox="0 0 32 32" fill="none">
+                  <rect x="2" y="2" width="28" height="28" rx="6" stroke="currentColor" stroke-width="2.5" />
+                  <circle cx="16" cy="16" r="7" stroke="#FF5B00" stroke-width="2.2" />
+                  <path d="M16 11V16L19 19" stroke="#FF5B00" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </div>
+              <span class="brand-title">OCHIR<span class="brand-sub">//ADMIN CONTROL ROOM</span></span>
+            </div>
+            <span class="admin-env-badge">OPERATIONS DESK</span>
+          </div>
+
+          <div class="admin-topbar-right">
+            <div class="firestore-badge-pill" id="firestore-status-pill" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:0.75rem;font-family:var(--font-mono);background:rgba(255,91,0,0.12);border:1px solid rgba(255,91,0,0.25);color:#FF5B00;cursor:pointer;" title="Click to view Firestore connection status">
+              <span class="firestore-dot" id="firestore-dot" style="width:7px;height:7px;border-radius:50%;background:#FF5B00;"></span>
+              <span id="firestore-status-label">Firestore: Standby</span>
+            </div>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-sync-firestore" title="Upload local catalog and settings to Firebase Firestore" style="padding:6px 12px;font-size:0.75rem;">
+              <span>🔥 Sync to Firestore</span>
+            </button>
+            <div class="status-indicator">
+              <span class="indicator-pulse"></span>
+              <span class="indicator-label" id="store-status-pill">STORE: OPERATIONAL</span>
+            </div>
+            <button type="button" class="admin-close-room-btn" id="btn-close-admin-room" aria-label="Return to Storefront">
+              <span>✕ Return to Storefront</span>
+            </button>
+          </div>
+        </header>
+
+        <div class="admin-layout">
+          <!-- Admin Sidebar Navigation -->
+          <aside class="admin-sidebar" aria-label="Admin Navigation">
+            <nav class="admin-nav">
+              <button type="button" class="admin-nav-item is-active" data-view="dashboard">
+                <span class="nav-icon">📊</span>
+                <span>Executive Dashboard</span>
+              </button>
+              <button type="button" class="admin-nav-item" data-view="orders">
+                <span class="nav-icon">📦</span>
+                <span>Order Management</span>
+                <span class="admin-badge" id="sidebar-order-badge">0</span>
+              </button>
+              <button type="button" class="admin-nav-item" data-view="products">
+                <span class="nav-icon">⌚</span>
+                <span>Product Catalog</span>
+                <span class="admin-badge" id="sidebar-prod-badge">6</span>
+              </button>
+              <button type="button" class="admin-nav-item" data-view="customers">
+                <span class="nav-icon">👥</span>
+                <span>Users &amp; Clients</span>
+                <span class="admin-badge" id="sidebar-users-badge">0</span>
+              </button>
+              <button type="button" class="admin-nav-item" data-view="chat">
+                <span class="nav-icon">💬</span>
+                <span>Live Concierge Chat</span>
+                <span class="admin-badge" id="sidebar-inq-badge">0</span>
+              </button>
+              <button type="button" class="admin-nav-item" data-view="settings">
+                <span class="nav-icon">⚙️</span>
+                <span>Store Settings</span>
+              </button>
+            </nav>
+
+            <div class="admin-sidebar-footer">
+              <div class="admin-user-pill">
+                <span class="user-avatar" id="admin-sidebar-avatar">OA</span>
+                <div class="user-info">
+                  <span class="user-name" id="admin-sidebar-name">Atelier Master Admin</span>
+                  <span class="user-role">Role: Administrator</span>
+                </div>
+              </div>
+              <button type="button" class="btn btn-secondary btn-sm w-full" id="btn-admin-switch-to-user" style="margin-top:12px;font-size:0.75rem;">
+                <span>👤 Switch to User View</span>
+              </button>
+            </div>
+          </aside>
+
+          <!-- Main Admin Workspace -->
+          <main class="admin-main">
+            <!-- ================= VIEW 1: EXECUTIVE DASHBOARD ================= -->
+            <section class="admin-view" id="view-dashboard">
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> LIVE FINANCIAL &amp; FULFILLMENT TELEMETRY</span>
+                  <h1 class="admin-view-title">Executive Operations Dashboard</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-secondary" id="refresh-dashboard-btn">⟳ Refresh Data</button>
+                </div>
+              </div>
+
+              <!-- Low Stock Alert Banner -->
+              <div class="alert-banner low-stock-banner" id="low-stock-alert-banner" hidden>
+                <span class="alert-icon">⚠️</span>
+                <div class="alert-content">
+                  <strong>Low Inventory Alert:</strong>
+                  <span id="low-stock-items-text">Items below reserve threshold.</span>
+                </div>
+              </div>
+
+              <!-- KPI Metric Cards Grid -->
+              <div class="kpi-grid">
+                <div class="kpi-card">
+                  <div class="kpi-top">
+                    <span class="kpi-label">TOTAL REVENUE (ALL-TIME)</span>
+                    <span class="kpi-trend positive">+18.4%</span>
+                  </div>
+                  <div class="kpi-value" id="kpi-revenue">৳0</div>
+                  <div class="kpi-footer">Based on verified completed transactions</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-top">
+                    <span class="kpi-label">ACTIVE ORDERS PENDING</span>
+                    <span class="kpi-status-badge">ACTION REQ</span>
+                  </div>
+                  <div class="kpi-value" id="kpi-pending-orders">0</div>
+                  <div class="kpi-footer">Pending verification or dispatch</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-top">
+                    <span class="kpi-label">AVERAGE ORDER VALUE (AOV)</span>
+                    <span class="kpi-trend positive">+6.2%</span>
+                  </div>
+                  <div class="kpi-value" id="kpi-aov">৳0</div>
+                  <div class="kpi-footer">Per acquired customer basket</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-top">
+                    <span class="kpi-label">INVENTORY IN RESERVE</span>
+                    <span class="kpi-status-badge info">ACTIVE</span>
+                  </div>
+                  <div class="kpi-value" id="kpi-total-stock">0</div>
+                  <div class="kpi-footer">Across all luxury catalog SKUs</div>
+                </div>
+              </div>
+
+              <!-- Dashboard Charts & Activity Grid -->
+              <div class="dash-split-grid">
+                <!-- Revenue Trend Bar Graph -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3>Revenue Trajectory (Last 7 Days)</h3>
+                    <span class="card-sub-info">Values in BDT</span>
+                  </div>
+                  <div class="revenue-chart-stage">
+                    <div class="chart-bars-wrap" id="chart-bars-wrap">
+                      <!-- Bars generated by JS -->
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Real-Time Activity Feed -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3>Atelier Activity Stream</h3>
+                    <span class="live-dot" title="Live stream active"></span>
+                  </div>
+                  <div class="activity-feed-list" id="activity-feed-list">
+                    <!-- Activity items rendered by JS -->
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <!-- ================= VIEW 2: ORDER MANAGEMENT ================= -->
+            <section class="admin-view" id="view-orders" hidden>
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> FULFILLMENT &amp; LOGISTICS PROTOCOL</span>
+                  <h1 class="admin-view-title">Order Management System</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-primary" id="btn-create-manual-order">+ Manual Order</button>
+                </div>
+              </div>
+
+              <!-- Filter & Search Toolbar -->
+              <div class="table-toolbar">
+                <div class="table-search-box">
+                  <span class="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    id="orders-search-input"
+                    class="table-search-input"
+                    placeholder="Search by Order ID (OCH-...), Customer, or Email..."
+                  />
+                </div>
+                <div class="filter-pills-row" id="order-status-filters">
+                  <button type="button" class="filter-pill is-active" data-status="All">All (<span id="count-all">0</span>)</button>
+                  <button type="button" class="filter-pill" data-status="Pending Verification">Pending (<span id="count-pending">0</span>)</button>
+                  <button type="button" class="filter-pill" data-status="Processing">Processing (<span id="count-processing">0</span>)</button>
+                  <button type="button" class="filter-pill" data-status="Dispatched">Dispatched (<span id="count-dispatched">0</span>)</button>
+                  <button type="button" class="filter-pill" data-status="Delivered">Delivered (<span id="count-delivered">0</span>)</button>
+                </div>
+              </div>
+
+              <!-- Orders Data Table -->
+              <div class="data-table-card">
+                <div class="table-responsive">
+                  <table class="data-table" id="orders-table">
+                    <thead>
+                      <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Customer</th>
+                        <th>Items Acquired</th>
+                        <th>Total</th>
+                        <th>Payment</th>
+                        <th>Fulfillment Status</th>
+                        <th>Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="orders-tbody">
+                      <!-- Populated by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- ================= VIEW 3: PRODUCT CATALOG MANAGER ================= -->
+            <section class="admin-view" id="view-products" hidden>
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> ATELIER INVENTORY &amp; PUBLISHING</span>
+                  <h1 class="admin-view-title">Product Catalog Manager</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-secondary" id="btn-seed-catalog">✦ Seed Initial Atelier Catalog</button>
+                  <button type="button" class="btn btn-primary" id="btn-add-new-product">+ Add New Piece</button>
+                </div>
+              </div>
+
+              <div class="products-grid-admin" id="products-admin-grid">
+                <!-- Populated by JS -->
+              </div>
+            </section>
+
+            <!-- ================= VIEW 4: USERS & CLIENT MANAGEMENT ================= -->
+            <section class="admin-view" id="view-customers" hidden>
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> REGISTERED ATELIER CLIENTELE &amp; ACCOUNTS</span>
+                  <h1 class="admin-view-title">Users &amp; Client Management</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-secondary" id="btn-refresh-users">⟳ Refresh Accounts</button>
+                </div>
+              </div>
+
+              <!-- Filter & Search Toolbar -->
+              <div class="table-toolbar">
+                <div class="table-search-box">
+                  <span class="search-icon">🔍</span>
+                  <input
+                    type="text"
+                    id="users-search-input"
+                    class="table-search-input"
+                    placeholder="Search by User Name, Email, or Phone..."
+                  />
+                </div>
+                <div class="filter-pills-row" id="user-role-filters">
+                  <button type="button" class="filter-pill is-active" data-role="All">All Users (<span id="user-count-all">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role="admin">Administrators (<span id="user-count-admin">0</span>)</button>
+                  <button type="button" class="filter-pill" data-role="customer">Clients (<span id="user-count-clients">0</span>)</button>
+                </div>
+              </div>
+
+              <!-- Users Data Table -->
+              <div class="data-table-card">
+                <div class="table-responsive">
+                  <table class="data-table" id="users-table">
+                    <thead>
+                      <tr>
+                        <th>Client / User</th>
+                        <th>Email Address</th>
+                        <th>Phone</th>
+                        <th>Role &amp; Privilege</th>
+                        <th>Registered Date</th>
+                        <th>Orders Placed</th>
+                        <th style="text-align:right;">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody id="users-tbody">
+                      <!-- Populated dynamically by JS -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <!-- ================= VIEW 5: LIVE CONCIERGE CHAT INBOX ================= -->
+            <section class="admin-view" id="view-chat" hidden>
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> REAL-TIME CLIENT CONCIERGE</span>
+                  <h1 class="admin-view-title">Live Concierge Chat Inbox</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-secondary" id="btn-refresh-admin-chat">⟳ Refresh Conversations</button>
+                </div>
+              </div>
+
+              <div class="clients-layout-split">
+                <!-- Left Panel: Live Chat Conversations -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3>Customer Conversations</h3>
+                    <span class="live-dot" title="Live stream active"></span>
+                  </div>
+                  <div class="inquiry-list" id="admin-chat-conv-list">
+                    <!-- Populated by JS -->
+                  </div>
+                </div>
+
+                <!-- Right Panel: Conversation Thread & Reply Composer -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3 id="admin-active-chat-title">Conversation Thread</h3>
+                    <span class="card-sub-info" id="admin-active-chat-meta">Select a client on the left</span>
+                  </div>
+                  <div id="admin-chat-thread-body" style="height:340px;overflow-y:auto;padding:14px;background:#16171b;border-radius:10px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;">
+                    <p style="color:#86868b;text-align:center;margin:auto;">Select a conversation to inspect dialogue and respond.</p>
+                  </div>
+                  <form id="admin-chat-reply-form" style="display:flex;gap:8px;">
+                    <input type="text" id="admin-chat-reply-input" class="text-input" placeholder="Type concierge reply to customer..." disabled />
+                    <button type="submit" class="btn btn-primary" id="btn-admin-reply" disabled>Send ↗</button>
+                  </form>
+                </div>
+              </div>
+            </section>
+
+            <!-- ================= VIEW 5: STORE SETTINGS ================= -->
+            <section class="admin-view" id="view-settings" hidden>
+              <div class="admin-view-header">
+                <div>
+                  <span class="micro-badge"><span class="badge-dot"></span> PLATFORM INFRASTRUCTURE &amp; GATEWAYS</span>
+                  <h1 class="admin-view-title">Atelier Store Settings</h1>
+                </div>
+                <div class="admin-header-actions">
+                  <button type="button" class="btn btn-primary" id="btn-save-settings">Save Changes</button>
+                </div>
+              </div>
+
+              <div class="settings-grid">
+                <!-- Card 1: Atelier Profile & WhatsApp -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3>Atelier Profile &amp; WhatsApp Concierge</h3>
+                  </div>
+                  <div class="settings-form-body">
+                    <div class="field-group">
+                      <label for="set-store-name">Store Name</label>
+                      <input type="text" id="set-store-name" class="text-input" value="Ochir Atelier" />
+                    </div>
+                    <div class="field-group">
+                      <label for="set-whatsapp-num">Official WhatsApp Number (Displayed Across Site)</label>
+                      <input type="text" id="set-whatsapp-num" class="text-input" value="01335852121" />
+                    </div>
+                    <div class="field-group">
+                      <label for="set-whatsapp-prefill">WhatsApp Prefilled Message</label>
+                      <input type="text" id="set-whatsapp-prefill" class="text-input" value="Hello OCHIR, I need help with a product or order." />
+                    </div>
+                    <div class="field-row">
+                      <div class="field-group">
+                        <label for="set-store-phone">Contact Phone</label>
+                        <input type="text" id="set-store-phone" class="text-input" value="+880 1335 852121" />
+                      </div>
+                      <div class="field-group">
+                        <label for="set-store-email">Support Email</label>
+                        <input type="email" id="set-store-email" class="text-input" value="concierge@ochir.com" />
+                      </div>
+                    </div>
+                    <div class="field-group">
+                      <label for="set-store-address">Physical Atelier Address</label>
+                      <input type="text" id="set-store-address" class="text-input" value="Banani Atelier, Road 11, Dhaka, Bangladesh" />
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Card 2: Manual Payment Methods & Delivery Fees -->
+                <div class="admin-card">
+                  <div class="card-header">
+                    <h3>Manual Payment Accounts &amp; Delivery Logistics</h3>
+                  </div>
+                  <div class="settings-form-body">
+                    <div class="field-group">
+                      <label for="set-bkash-num">Official bKash Number (Send Money / Payment)</label>
+                      <input type="text" id="set-bkash-num" class="text-input" value="01335852121" />
+                    </div>
+                    <div class="field-group">
+                      <label for="set-rocket-num">Official Rocket Account Number</label>
+                      <input type="text" id="set-rocket-num" class="text-input" value="01335852121-8" />
+                    </div>
+                    <div class="field-row">
+                      <div class="field-group">
+                        <label for="set-charge-inside">Delivery Charge Inside Dhaka (৳ BDT)</label>
+                        <input type="number" id="set-charge-inside" class="text-input" value="80" />
+                      </div>
+                      <div class="field-group">
+                        <label for="set-charge-outside">Delivery Charge Outside Dhaka (৳ BDT)</label>
+                        <input type="number" id="set-charge-outside" class="text-input" value="150" />
+                      </div>
+                    </div>
+                    <div class="field-group">
+                      <label for="set-free-threshold">Free Delivery Minimum Order (৳ BDT)</label>
+                      <input type="number" id="set-free-threshold" class="text-input" value="5000" />
+                    </div>
+                    <div class="field-group">
+                      <label for="set-banner-text">Promotional Announcement Banner</label>
+                      <input type="text" id="set-banner-text" class="text-input" value="Complimentary insured delivery across Bangladesh on orders over ৳5,000." />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: ORDER DETAIL & PACKING SLIP DRAWER (ADMIN) ================= -->
+    <div class="quote-modal-overlay" id="order-detail-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card order-detail-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">FULFILLMENT &amp; LOGISTICS DOSSIER</span>
+            <h3 id="modal-order-id">OCH-0000-XX</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="order-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <div class="order-modal-body" id="order-modal-body">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="order-modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-print-slip">🖨️ Print Archival Packing Slip</button>
+          <button type="button" class="btn btn-primary" id="btn-update-status-action">Save Status &amp; Notify Client</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: PRODUCT EDIT / CREATE (ADMIN) ================= -->
+    <div class="quote-modal-overlay" id="product-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card product-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">CATALOG PUBLISHING ENGINE</span>
+            <h3 id="product-modal-title">Edit Atelier Piece</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="product-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <form class="product-form" id="product-form">
+          <input type="hidden" id="prod-form-id" />
+          <div class="form-grid">
+            <div class="form-fields">
+              <div class="field-group">
+                <label for="prod-form-title">Product Title *</label>
+                <input type="text" id="prod-form-title" class="text-input" placeholder="e.g. The Ochir Chronograph 40mm" required />
+              </div>
+              <div class="field-group">
+                <label for="prod-form-subtitle">Subtitle / Technical Caliber</label>
+                <input type="text" id="prod-form-subtitle" class="text-input" placeholder="e.g. Swiss Column-Wheel Caliber · Marine 316L Steel" />
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-category">Category *</label>
+                  <select id="prod-form-category" class="select-input">
+                    <option value="timepieces">Timepieces</option>
+                    <option value="wallets">Cardholders &amp; Wallets</option>
+                    <option value="accessories">Signet &amp; Cuffs</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-subcat">Subcategory</label>
+                  <input type="text" id="prod-form-subcat" class="text-input" placeholder="e.g. Mechanical Chronographs" />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-sku">SKU Code *</label>
+                  <input type="text" id="prod-form-sku" class="text-input" placeholder="OCH-CHR-01" required />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-status">Publishing Status *</label>
+                  <select id="prod-form-status" class="select-input">
+                    <option value="published">Published (Public in Flagship)</option>
+                    <option value="draft">Draft / Unpublished (Private)</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-price">Base Price (৳ BDT) *</label>
+                  <input type="number" id="prod-form-price" class="text-input" placeholder="175000" required />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-compare">Compare-at Price (৳ BDT)</label>
+                  <input type="number" id="prod-form-compare" class="text-input" placeholder="195000" />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-stock">Stock Quantity *</label>
+                  <input type="number" id="prod-form-stock" class="text-input" placeholder="10" required />
+                </div>
+              </div>
+              <div class="field-group">
+                <label for="prod-form-story">Story &amp; Craft Description</label>
+                <textarea id="prod-form-story" class="text-input textarea-input" rows="4" placeholder="Detailed architectural narrative of materials and finish..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-fields">
+              <div class="field-group">
+                <label for="prod-form-img-file">Upload Image from Disk (Automatic Server Storage)</label>
+                <input type="file" id="prod-form-img-file" class="text-input" accept="image/*" />
+                <span style="font-size:0.72rem;color:#86868b;display:block;margin-top:4px;">Uploads directly to server /uploads/ folder.</span>
+              </div>
+              <div class="field-group">
+                <label for="prod-form-img-primary">Primary Image URL *</label>
+                <input type="text" id="prod-form-img-primary" class="text-input" placeholder="https://... or /uploads/..." required />
+              </div>
+              <div class="field-group">
+                <label for="prod-form-img-alt">Lifestyle / Hover Image URL</label>
+                <input type="text" id="prod-form-img-alt" class="text-input" placeholder="https://... or /uploads/..." />
+              </div>
+
+              <div class="field-group">
+                <label for="prod-form-variants-str">Variants (Comma-separated, e.g. Obsidian, Slate Grey, Tan)</label>
+                <input type="text" id="prod-form-variants-str" class="text-input" placeholder="Matte Obsidian, Slate Grey, Sand Silver" />
+              </div>
+
+              <div class="field-group">
+                <label>Badge Flags</label>
+                <div class="checkbox-flags-row">
+                  <label><input type="checkbox" id="flag-featured" /> Featured on Landing</label>
+                  <label><input type="checkbox" id="flag-limited" /> Limited Edition</label>
+                  <label><input type="checkbox" id="flag-new" /> New Arrival</label>
+                  <label><input type="checkbox" id="flag-soldout" /> Sold Out</label>
+                </div>
+              </div>
+
+              <div class="form-submit-row">
+                <button type="submit" class="btn btn-primary w-full">Save &amp; Publish Piece ↗</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- In-App Luxury Toast Container -->
+    <div class="ochir-toast-container" id="ochir-toast-container" aria-live="polite"></div>
+
+    <!-- Mobile Drawer Overlay Backdrop -->
+    <div class="drawer-overlay" id="drawer-overlay" hidden></div>
+  </body>
+</html>
+

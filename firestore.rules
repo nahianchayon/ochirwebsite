@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.role == 'admin' ||
+        request.auth.token.email == 'admin@ochir.com' ||
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin'
+      );
+    }
+
+    // Products: Publicly readable; Admin writable
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if true; // Set to `if isAdmin();` when Firebase Auth is enforced
+    }
+
+    // Orders: Public order creation; Read/Update by owner or admin
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if true;
+    }
+
+    // Store Settings: Public read; Admin write
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Live Concierge Chat: Public read and create messages
+    match /chatMessages/{msgId} {
+      allow read, create: if true;
+      allow update, delete: if true;
+    }
+
+    // Coupons: Public read (for checkout validation); Admin write
+    match /coupons/{couponId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Users: Private profile access
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}
+

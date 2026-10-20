@@ -1,0 +1,19 @@
+{
+  "name": "ochir-brand-website",
+  "version": "1.0.0",
+  "description": "OCHIR - Luxury Watch & Heritage Atelier E-Commerce Platform",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "luxury",
+    "ecommerce",
+    "watches",
+    "atelier",
+    "firestore",
+    "ochir"
+  ],
+  "author": "OCHIR Atelier",
+  "license": "ISC"
+}

@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0d0e11" />
+    <title>OCHIR // Operational Command Center (Admin)</title>
+
+    <!-- Typography: Space Grotesk, Inter, and JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="styles.css" />
+    <!-- Firebase App & Cloud Firestore SDK (Compat v10) -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-analytics-compat.js"></script>
+    <script src="firebase-config.js"></script>
+
+    <!-- Shared Store Engine -->
+    <script src="store.js"></script>
+    <script src="admin.js" defer></script>
+  </head>
+  <body class="site-body dark-theme admin-body">
+    <!-- Admin Topbar -->
+    <header class="admin-topbar">
+      <div class="admin-topbar-left">
+        <a class="brand-mark" href="/admin" aria-label="Ochir Admin">
+          <div class="brand-symbol" aria-hidden="true">
+            <svg viewBox="0 0 32 32" fill="none">
+              <rect x="2" y="2" width="28" height="28" rx="6" stroke="currentColor" stroke-width="2.5" />
+              <circle cx="16" cy="16" r="7" stroke="#FF5B00" stroke-width="2.2" />
+              <path d="M16 11V16L19 19" stroke="#FF5B00" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </div>
+          <span class="brand-title">OCHIR<span class="brand-sub">//OPERATIONS</span></span>
+        </a>
+        <span class="admin-env-badge">PRODUCTION ATELIER</span>
+      </div>
+
+      <div class="admin-topbar-right">
+        <div class="firestore-badge-pill" id="firestore-status-pill" style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:100px;font-size:0.75rem;font-family:var(--font-mono);background:rgba(255,91,0,0.12);border:1px solid rgba(255,91,0,0.25);color:#FF5B00;cursor:pointer;" title="Click to view Firestore connection status">
+          <span class="firestore-dot" id="firestore-dot" style="width:7px;height:7px;border-radius:50%;background:#FF5B00;"></span>
+          <span id="firestore-status-label">Firestore: Standby</span>
+        </div>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-sync-firestore" title="Upload local catalog and settings to Firebase Firestore" style="padding:6px 12px;font-size:0.75rem;">
+          <span>🔥 Sync to Firestore</span>
+        </button>
+        <div class="status-indicator">
+          <span class="indicator-pulse"></span>
+          <span class="indicator-label" id="store-status-pill">STORE: OPERATIONAL</span>
+        </div>
+        <a href="/" class="btn btn-secondary admin-view-store-btn" target="_blank" rel="noopener">
+          <span>View Flagship Storefront</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      </div>
+    </header>
+
+    <div class="admin-layout">
+      <!-- Admin Sidebar Navigation -->
+      <aside class="admin-sidebar" aria-label="Admin Navigation">
+        <nav class="admin-nav">
+          <button type="button" class="admin-nav-item is-active" data-view="dashboard">
+            <span class="nav-icon">📊</span>
+            <span>Executive Dashboard</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-view="orders">
+            <span class="nav-icon">📦</span>
+            <span>Order Management</span>
+            <span class="admin-badge" id="sidebar-order-badge">0</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-view="products">
+            <span class="nav-icon">⌚</span>
+            <span>Product Catalog</span>
+            <span class="admin-badge" id="sidebar-prod-badge">6</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-view="customers">
+            <span class="nav-icon">👥</span>
+            <span>Clients &amp; Inquiries</span>
+            <span class="admin-badge" id="sidebar-inq-badge">2</span>
+          </button>
+          <button type="button" class="admin-nav-item" data-view="settings">
+            <span class="nav-icon">⚙️</span>
+            <span>Store Settings</span>
+          </button>
+        </nav>
+
+        <div class="admin-sidebar-footer">
+          <div class="admin-user-pill">
+            <span class="user-avatar">OA</span>
+            <div class="user-info">
+              <span class="user-name">Atelier Master Admin</span>
+              <span class="user-role">Full Clearance (RLS Role)</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Main Admin Workspace -->
+      <main class="admin-main">
+        <!-- ================= VIEW 1: EXECUTIVE DASHBOARD ================= -->
+        <section class="admin-view" id="view-dashboard">
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> LIVE FINANCIAL &amp; FULFILLMENT TELEMETRY</span>
+              <h1 class="admin-view-title">Executive Operations Dashboard</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-secondary" id="refresh-dashboard-btn">⟳ Refresh Data</button>
+            </div>
+          </div>
+
+          <!-- Low Stock Alert Banner -->
+          <div class="alert-banner low-stock-banner" id="low-stock-alert-banner" hidden>
+            <span class="alert-icon">⚠️</span>
+            <div class="alert-content">
+              <strong>Low Inventory Alert:</strong>
+              <span id="low-stock-items-text">Items below reserve threshold.</span>
+            </div>
+          </div>
+
+          <!-- KPI Metric Cards Grid -->
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-label">TOTAL REVENUE (ALL-TIME)</span>
+                <span class="kpi-trend positive">+18.4%</span>
+              </div>
+              <div class="kpi-value" id="kpi-revenue">$0</div>
+              <div class="kpi-footer">Based on verified completed transactions</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-label">ACTIVE ORDERS PENDING</span>
+                <span class="kpi-status-badge">ACTION REQ</span>
+              </div>
+              <div class="kpi-value" id="kpi-pending-orders">0</div>
+              <div class="kpi-footer">Pending verification or dispatch</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-label">AVERAGE ORDER VALUE (AOV)</span>
+                <span class="kpi-trend positive">+6.2%</span>
+              </div>
+              <div class="kpi-value" id="kpi-aov">$0</div>
+              <div class="kpi-footer">Per acquired customer basket</div>
+            </div>
+
+            <div class="kpi-card">
+              <div class="kpi-top">
+                <span class="kpi-label">INVENTORY IN RESERVE</span>
+                <span class="kpi-status-badge info">ACTIVE</span>
+              </div>
+              <div class="kpi-value" id="kpi-total-stock">0</div>
+              <div class="kpi-footer">Across all 6 luxury catalog SKUs</div>
+            </div>
+          </div>
+
+          <!-- Dashboard Charts & Activity Grid -->
+          <div class="dash-split-grid">
+            <!-- Simulated Revenue Trend Bar Graph -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3>Revenue Trajectory (Last 7 Days)</h3>
+                <span class="card-sub-info">Values in USD</span>
+              </div>
+              <div class="revenue-chart-stage">
+                <div class="chart-bars-wrap" id="chart-bars-wrap">
+                  <!-- Bars generated by JS -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Real-Time Activity Feed -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3>Atelier Activity Stream</h3>
+                <span class="live-dot" title="Live stream active"></span>
+              </div>
+              <div class="activity-feed-list" id="activity-feed-list">
+                <!-- Activity items rendered by JS -->
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 2: ORDER MANAGEMENT ================= -->
+        <section class="admin-view" id="view-orders" hidden>
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> FULFILLMENT &amp; LOGISTICS PROTOCOL</span>
+              <h1 class="admin-view-title">Order Management System</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-primary" id="btn-create-manual-order">+ Manual Order</button>
+            </div>
+          </div>
+
+          <!-- Filter & Search Toolbar -->
+          <div class="table-toolbar">
+            <div class="table-search-box">
+              <span class="search-icon">🔍</span>
+              <input
+                type="text"
+                id="orders-search-input"
+                class="table-search-input"
+                placeholder="Search by Order ID (OCH-...), Customer, or Email..."
+              />
+            </div>
+            <div class="filter-pills-row" id="order-status-filters">
+              <button type="button" class="filter-pill is-active" data-status="All">All (<span id="count-all">0</span>)</button>
+              <button type="button" class="filter-pill" data-status="Pending Verification">Pending (<span id="count-pending">0</span>)</button>
+              <button type="button" class="filter-pill" data-status="Processing">Processing (<span id="count-processing">0</span>)</button>
+              <button type="button" class="filter-pill" data-status="Dispatched">Dispatched (<span id="count-dispatched">0</span>)</button>
+              <button type="button" class="filter-pill" data-status="Delivered">Delivered (<span id="count-delivered">0</span>)</button>
+            </div>
+          </div>
+
+          <!-- Orders Data Table -->
+          <div class="data-table-card">
+            <div class="table-responsive">
+              <table class="data-table" id="orders-table">
+                <thead>
+                  <tr>
+                    <th>Order ID</th>
+                    <th>Date</th>
+                    <th>Customer</th>
+                    <th>Items Acquired</th>
+                    <th>Total</th>
+                    <th>Payment</th>
+                    <th>Fulfillment Status</th>
+                    <th>Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="orders-tbody">
+                  <!-- Populated by JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 3: PRODUCT CATALOG MANAGER ================= -->
+        <section class="admin-view" id="view-products" hidden>
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> ATELIER INVENTORY &amp; PUBLISHING</span>
+              <h1 class="admin-view-title">Product Catalog Manager</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-secondary" id="btn-seed-catalog">✦ Seed Initial Atelier Catalog</button>
+              <button type="button" class="btn btn-primary" id="btn-add-new-product">+ Add New Piece</button>
+            </div>
+          </div>
+
+          <div class="products-grid-admin" id="products-admin-grid">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- ================= VIEW 4: CLIENTS & INQUIRIES ================= -->
+        <section class="admin-view" id="view-customers" hidden>
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> DIRECT CONCIERGE &amp; CLIENTELE</span>
+              <h1 class="admin-view-title">Clients &amp; Live Concierge Inbox</h1>
+            </div>
+          </div>
+
+          <div class="clients-layout-split">
+            <!-- Left Panel: Live Chat Conversations -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3>Customer Chat Conversations</h3>
+                <span class="live-dot" title="Live stream active"></span>
+              </div>
+              <div class="inquiry-list" id="admin-chat-conv-list">
+                <!-- Populated by JS -->
+              </div>
+            </div>
+
+            <!-- Right Panel: Conversation Thread & Reply Composer -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3 id="admin-active-chat-title">Conversation Thread</h3>
+                <span class="card-sub-info" id="admin-active-chat-meta">Select a client on the left</span>
+              </div>
+              <div id="admin-chat-thread-body" style="height:320px;overflow-y:auto;padding:14px;background:#16171b;border-radius:10px;margin-bottom:12px;display:flex;flex-direction:column;gap:8px;">
+                <p style="color:#86868b;text-align:center;margin:auto;">Select a conversation to inspect dialogue and respond.</p>
+              </div>
+              <form id="admin-chat-reply-form" style="display:flex;gap:8px;">
+                <input type="text" id="admin-chat-reply-input" class="text-input" placeholder="Type concierge reply to customer..." disabled />
+                <button type="submit" class="btn btn-primary" id="btn-admin-reply" disabled>Send ↗</button>
+              </form>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= VIEW 5: STORE SETTINGS ================= -->
+        <section class="admin-view" id="view-settings" hidden>
+          <div class="admin-view-header">
+            <div>
+              <span class="micro-badge"><span class="badge-dot"></span> PLATFORM INFRASTRUCTURE &amp; GATEWAYS</span>
+              <h1 class="admin-view-title">Atelier Store Settings</h1>
+            </div>
+            <div class="admin-header-actions">
+              <button type="button" class="btn btn-primary" id="btn-save-settings">Save Changes</button>
+            </div>
+          </div>
+
+          <div class="settings-grid">
+            <!-- Card 1: Atelier Profile & WhatsApp -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3>Atelier Profile &amp; WhatsApp Concierge</h3>
+              </div>
+              <div class="settings-form-body">
+                <div class="field-group">
+                  <label for="set-store-name">Store Name</label>
+                  <input type="text" id="set-store-name" class="text-input" value="Ochir Atelier" />
+                </div>
+                <div class="field-group">
+                  <label for="set-whatsapp-num">Official WhatsApp Number (Displayed Across Site)</label>
+                  <input type="text" id="set-whatsapp-num" class="text-input" value="01335852121" />
+                </div>
+                <div class="field-group">
+                  <label for="set-whatsapp-prefill">WhatsApp Prefilled Message</label>
+                  <input type="text" id="set-whatsapp-prefill" class="text-input" value="Hello OCHIR, I need help with a product or order." />
+                </div>
+                <div class="field-row">
+                  <div class="field-group">
+                    <label for="set-store-phone">Contact Phone</label>
+                    <input type="text" id="set-store-phone" class="text-input" value="+880 1335 852121" />
+                  </div>
+                  <div class="field-group">
+                    <label for="set-store-email">Support Email</label>
+                    <input type="email" id="set-store-email" class="text-input" value="concierge@ochir.com" />
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label for="set-store-address">Physical Atelier Address</label>
+                  <input type="text" id="set-store-address" class="text-input" value="Banani Atelier, Road 11, Dhaka, Bangladesh" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Card 2: Manual Payment Methods & Delivery Fees -->
+            <div class="admin-card">
+              <div class="card-header">
+                <h3>Manual Payment Accounts &amp; Delivery Logistics</h3>
+              </div>
+              <div class="settings-form-body">
+                <div class="field-group">
+                  <label for="set-bkash-num">Official bKash Number (Send Money / Payment)</label>
+                  <input type="text" id="set-bkash-num" class="text-input" value="01335852121" />
+                </div>
+                <div class="field-group">
+                  <label for="set-rocket-num">Official Rocket Account Number</label>
+                  <input type="text" id="set-rocket-num" class="text-input" value="01335852121-8" />
+                </div>
+                <div class="field-row">
+                  <div class="field-group">
+                    <label for="set-charge-inside">Delivery Charge Inside Dhaka (৳ BDT)</label>
+                    <input type="number" id="set-charge-inside" class="text-input" value="80" />
+                  </div>
+                  <div class="field-group">
+                    <label for="set-charge-outside">Delivery Charge Outside Dhaka (৳ BDT)</label>
+                    <input type="number" id="set-charge-outside" class="text-input" value="150" />
+                  </div>
+                </div>
+                <div class="field-group">
+                  <label for="set-free-threshold">Free Delivery Minimum Order (৳ BDT)</label>
+                  <input type="number" id="set-free-threshold" class="text-input" value="5000" />
+                </div>
+                <div class="field-group">
+                  <label for="set-banner-text">Promotional Announcement Banner</label>
+                  <input type="text" id="set-banner-text" class="text-input" value="Complimentary insured delivery across Bangladesh on orders over ৳5,000." />
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ================= MODAL: ORDER DETAIL & PACKING SLIP DRAWER ================= -->
+    <div class="quote-modal-overlay" id="order-detail-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card order-detail-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">FULFILLMENT &amp; LOGISTICS DOSSIER</span>
+            <h3 id="modal-order-id">OCH-0000-XX</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="order-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <div class="order-modal-body" id="order-modal-body">
+          <!-- Populated by JS -->
+        </div>
+
+        <div class="order-modal-actions">
+          <button type="button" class="btn btn-secondary" id="btn-print-slip">🖨️ Print Archival Packing Slip</button>
+          <button type="button" class="btn btn-primary" id="btn-update-status-action">Save Status &amp; Notify Client</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================= MODAL: PRODUCT EDIT / CREATE ================= -->
+    <div class="quote-modal-overlay" id="product-modal" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="modal-card product-modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-kicker">CATALOG PUBLISHING ENGINE</span>
+            <h3 id="product-modal-title">Edit Atelier Piece</h3>
+          </div>
+          <button type="button" class="modal-close-btn" id="product-modal-close" aria-label="Close dialog">✕</button>
+        </div>
+
+        <form class="product-form" id="product-form">
+          <input type="hidden" id="prod-form-id" />
+          <div class="form-grid">
+            <div class="form-fields">
+              <div class="field-group">
+                <label for="prod-form-title">Product Title *</label>
+                <input type="text" id="prod-form-title" class="text-input" placeholder="e.g. The Ochir Chronograph 40mm" required />
+              </div>
+              <div class="field-group">
+                <label for="prod-form-subtitle">Subtitle / Technical Caliber</label>
+                <input type="text" id="prod-form-subtitle" class="text-input" placeholder="e.g. Swiss Column-Wheel Caliber · Marine 316L Steel" />
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-category">Category *</label>
+                  <select id="prod-form-category" class="select-input">
+                    <option value="timepieces">Timepieces</option>
+                    <option value="wallets">Cardholders &amp; Wallets</option>
+                    <option value="accessories">Signet &amp; Cuffs</option>
+                  </select>
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-subcat">Subcategory</label>
+                  <input type="text" id="prod-form-subcat" class="text-input" placeholder="e.g. Mechanical Chronographs" />
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-sku">SKU Code *</label>
+                  <input type="text" id="prod-form-sku" class="text-input" placeholder="OCH-CHR-01" required />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-status">Publishing Status *</label>
+                  <select id="prod-form-status" class="select-input">
+                    <option value="published">Published (Public in Flagship)</option>
+                    <option value="draft">Draft / Unpublished (Private)</option>
+                    <option value="archived">Archived</option>
+                  </select>
+                </div>
+              </div>
+              <div class="field-row">
+                <div class="field-group">
+                  <label for="prod-form-price">Base Price (৳ BDT) *</label>
+                  <input type="number" id="prod-form-price" class="text-input" placeholder="175000" required />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-compare">Compare-at Price (৳ BDT)</label>
+                  <input type="number" id="prod-form-compare" class="text-input" placeholder="195000" />
+                </div>
+                <div class="field-group">
+                  <label for="prod-form-stock">Stock Quantity *</label>
+                  <input type="number" id="prod-form-stock" class="text-input" placeholder="10" required />
+                </div>
+              </div>
+              <div class="field-group">
+                <label for="prod-form-story">Story &amp; Craft Description</label>
+                <textarea id="prod-form-story" class="text-input textarea-input" rows="4" placeholder="Detailed architectural narrative of materials and finish..."></textarea>
+              </div>
+            </div>
+
+            <div class="form-fields">
+              <div class="field-group">
+                <label for="prod-form-img-file">Upload Image from Disk (Automatic Server Storage)</label>
+                <input type="file" id="prod-form-img-file" class="text-input" accept="image/*" />
+                <span style="font-size:0.72rem;color:#86868b;display:block;margin-top:4px;">Uploads directly to server /uploads/ folder.</span>
+              </div>
+              <div class="field-group">
+                <label for="prod-form-img-primary">Primary Image URL *</label>
+                <input type="text" id="prod-form-img-primary" class="text-input" placeholder="https://... or /uploads/..." required />
+              </div>
+              <div class="field-group">
+                <label for="prod-form-img-alt">Lifestyle / Hover Image URL</label>
+                <input type="text" id="prod-form-img-alt" class="text-input" placeholder="https://... or /uploads/..." />
+              </div>
+
+              <div class="field-group">
+                <label for="prod-form-variants-str">Variants (Comma-separated, e.g. Obsidian, Slate Grey, Tan)</label>
+                <input type="text" id="prod-form-variants-str" class="text-input" placeholder="Matte Obsidian, Slate Grey, Sand Silver" />
+              </div>
+
+              <div class="field-group">
+                <label>Badge Flags</label>
+                <div class="checkbox-flags-row">
+                  <label><input type="checkbox" id="flag-featured" /> Featured on Landing</label>
+                  <label><input type="checkbox" id="flag-limited" /> Limited Edition</label>
+                  <label><input type="checkbox" id="flag-new" /> New Arrival</label>
+                  <label><input type="checkbox" id="flag-soldout" /> Sold Out</label>
+                </div>
+              </div>
+
+              <div class="form-submit-row">
+                <button type="submit" class="btn btn-primary w-full">Save &amp; Publish Piece ↗</button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>
+
